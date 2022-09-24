@@ -14,3 +14,4 @@ def pega_musicas():
         for musica in container_musicas:
             musicas.append(musica.find_all('a')[0].get_text())
         i+=1
+    return musicas
