@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+
 # Função que pega todas as músicas do Imagine Dragons
 def pega_musicas():
     musicas = []
@@ -15,6 +16,7 @@ def pega_musicas():
             musicas.append(musica.find_all("a")[0].get_text())
         i+=1
     return musicas
+
 
 #criando um dataframe que pega todas as músicas do scraping e as ordenam
 df = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
@@ -37,7 +39,7 @@ def musica_tocada(n):
     except Exception as error:
         return error
 
-musica_tocada(-1)
+#musica_tocada(-1)
 
 def musica_mais_tocada():
     #a partir do dataframe, é possível escolher a música mais tocada
@@ -49,5 +51,18 @@ def musica_menos_tocada():
     print("A música menos tocada é", musica_tocada(500))
     return
 
-musica_mais_tocada ()
-musica_menos_tocada()
+#musica_mais_tocada ()
+#musica_menos_tocada()
+
+#Função que pega todos os álbuns da Imagine Dragons
+def pega_albuns():
+    albuns = []
+    i=1
+    while i<=7:
+        page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/+albums?page={i}")
+        soup = BeautifulSoup(page.content, "html.parser")
+        container_albuns = soup.find(id="artist-albums-section").find_all(class_="link-block-target")
+        for album in container_albuns:
+            albuns.append(album.get_text())
+        i+=1
+    return albuns
