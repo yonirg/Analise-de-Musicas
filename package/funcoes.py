@@ -103,5 +103,14 @@ def auxiliar_multi_index(dict_albuns_musicas):
     arrays = [lista_index1, lista_index2]
     return arrays
 
+#Cria DataFrame com  MultiIndex
+def df_MI(arrays):
+    multi_index = pd.MultiIndex.from_arrays(arrays, names=('Album', 'Musica'))
+    df = pd.DataFrame(index=multi_index)
+    return df
+
+# arrays = auxiliar_multi_index(albuns_musicas())
+# df = df_MI(arrays)
+# print(df)
 
 
