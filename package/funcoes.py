@@ -5,7 +5,6 @@ import pandas as pd
 from urllib.parse import quote_plus
 
 
-
 # Função que pega todas as músicas do Imagine Dragons
 def pega_musicas():
     musicas = []
@@ -78,7 +77,6 @@ def albuns_musicas():
         album_codificado = quote_plus(nome_album)
         page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/{album_codificado}")
         soup = BeautifulSoup(page.content, "html.parser")
-        print(nome_album)
         try:
             container_musicas_album = soup.find("section", id= "tracklist").find("tbody")
         except AttributeError as error:
@@ -92,6 +90,8 @@ def albuns_musicas():
         if "%2B" in nome_album:
             nome_album = nome_album.replace("%2B", "+")
         dict_albuns_musicas[nome_album]=conjunto_musicas_album
-    
-        
-#print(dict_albuns_musicas)
+    return dict_albuns_musicas
+
+
+
+
