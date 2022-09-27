@@ -92,6 +92,16 @@ def albuns_musicas():
         dict_albuns_musicas[nome_album]=conjunto_musicas_album
     return dict_albuns_musicas
 
+def auxiliar_multi_index(dict_albuns_musicas):
+    lista_index1 = []
+    for item in dict_albuns_musicas:
+        for vezes in range(len(dict_albuns_musicas[item])):
+            lista_index1.append(item)
+    lista_index2 = []
+    for chave in dict_albuns_musicas:
+        lista_index2 += dict_albuns_musicas[chave]    
+    arrays = [lista_index1, lista_index2]
+    return arrays
 
 
 
