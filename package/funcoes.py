@@ -109,8 +109,15 @@ def df_MI(arrays):
     df = pd.DataFrame(index=multi_index)
     return df
 
-# arrays = auxiliar_multi_index(albuns_musicas())
-# df = df_MI(arrays)
-# print(df)
+#arrays = auxiliar_multi_index(albuns_musicas())
+#df = df_MI(arrays)
+#print(df)
 
+#função para transformar album em dataframe - vou ter q mudar isso ainda para contabilizar palavras no wordlcoud
+def albuns_df():
+    lista = pega_albuns()
+    coluna = "Album"
+    df_album = pd.DataFrame(lista, columns=[coluna])
+    return df_album
 
+#print(albuns_df())
