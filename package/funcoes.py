@@ -6,17 +6,17 @@ import pandas as pd
 from urllib.parse import quote_plus
 import numpy as np
 import matplotlib.pyplot as plt
-from wordcloud import  WordCloud
+from wordcloud import WordCloud
 import sys
 import seaborn as sns
-
+"""
 np.set_printoptions(threshold=sys.maxsize)
 
 pd.set_option("display.max_rows", None)
 pd.set_option("display.max_columns", 10)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
-
+"""
 # Função que pega todas as músicas do Imagine Dragons
 def pega_musicas():
     musicas = []
@@ -29,7 +29,6 @@ def pega_musicas():
             musicas.append(musica.find_all("a")[0].get_text())
         i+=1
     return musicas
-
 #criando uma função para printar o número de ouvintes, porém, estou tendo problemas com filtragem - RESOLVER ISSO DEPOIS URGENTEMENTE
 def pega_ouvir():
     ouvintes = []
@@ -82,7 +81,7 @@ def musica_menos_tocada():
     return
 
 #musica_mais_tocada ()
-musica_menos_tocada()
+#musica_menos_tocada()
 
 #Função que pega todos os álbuns da Imagine Dragons
 def pega_albuns():
@@ -138,9 +137,9 @@ def df_MI(arrays):
     df = pd.DataFrame(index=multi_index)
     return df
 
-#arrays = auxiliar_multi_index(albuns_musicas())
-#df = df_MI(arrays)
-#print(df)
+# arrays = auxiliar_multi_index(albuns_musicas())
+# df = df_MI(arrays)
+# print(df)
 
 #função para transformar album em dataframe
 def albuns_mais_plv():
@@ -188,3 +187,26 @@ def musicas_mais_plv():
     return wordcloud
 
 #musicas_mais_plv()
+
+#Função que pega as letras das músicas únicas de todos os álbuns
+def pega_letras_unicas(data_frame_multiindex):
+    new_df = data_frame_multiindex.reset_index()
+    df_unicas = pd.DataFrame(new_df["Musica"].unique(), columns=["Musica"])
+    lista_letras=[]
+    for musica in df_unicas["Musica"]:
+        musica_convertida = musica.lower().replace(" ", "-").replace("(", "").replace(')',"").replace("'", "").replace("/","")
+        try:
+            page = requests.get(f"https://www.letras.mus.br/imagine-dragons/{musica_convertida}/")
+        except Exception as error:
+            print(f"não foi possível buscar a letra da música {musica} devido a grande quantidade de redirecionamentos")
+            print(error)
+            letra = "SEM LETRA"
+        else:
+            soup = BeautifulSoup(page.content, "html.parser")
+            letra = soup.find("div", class_= "cnt-letra p402_premium")
+            letra = str(letra).replace('<div class="cnt-letra p402_premium">','').replace(" <p>", "").replace("<p>", " ").replace("</p>", "").replace("<br/>", " ").replace("<br>", " ").replace("</br>", "").replace("</div>", "")
+        finally:    
+            lista_letras.append(letra)
+    return lista_letras
+        
+        
