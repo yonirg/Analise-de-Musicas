@@ -59,8 +59,9 @@ def musica_mais_tocada():
     return
 
 def musica_menos_tocada():
-    #a partir do dataframe, é possível escolher a música mais tocada
-    print("A música menos tocada é", musica_tocada(500))
+    #a partir do dataframe, é possível escolher a música menos tocada
+    df_musicas_inv = df_musicas.tail(1)
+    print("A música menos tocada é",df_musicas_inv["Músicas"].iloc[0])
     return
 
 #musica_mais_tocada ()
