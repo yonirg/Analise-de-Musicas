@@ -108,7 +108,7 @@ def albuns_musicas():
         try:
             container_musicas_album = soup.find("section", id= "tracklist").find("tbody")
         except AttributeError as error:
-            print("Sem músicas nesse Álbum", error)
+            print(f"Sem músicas no Álbum {nome_album}  Erro: {error}")
             continue
         musicas_album = container_musicas_album.find_all('tr')
         conjunto_musicas_album = []
@@ -137,9 +137,7 @@ def df_MI(arrays):
     df = pd.DataFrame(index=multi_index)
     return df
 
-# arrays = auxiliar_multi_index(albuns_musicas())
-# df = df_MI(arrays)
-# print(df)
+
 
 #função para transformar album em dataframe
 def albuns_mais_plv():
@@ -199,7 +197,7 @@ def pega_letras_unicas(data_frame_multiindex):
             page = requests.get(f"https://www.letras.mus.br/imagine-dragons/{musica_convertida}/")
         except Exception as error:
             print(f"não foi possível buscar a letra da música {musica} devido a grande quantidade de redirecionamentos")
-            print(error)
+            print(f"Erro: {error}")
             letra = "SEM LETRA"
         else:
             soup = BeautifulSoup(page.content, "html.parser")
@@ -220,3 +218,10 @@ def letras_df(df, df_unicas):
     return result
 
         
+
+# ### ÁREA DE TESTE
+# arrays = auxiliar_multi_index(albuns_musicas())
+# df = df_MI(arrays)
+# df_unicas = pega_letras_unicas(df)
+# df_final = letras_df(df, df_unicas)
+# print(df_final)
