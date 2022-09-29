@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from wordcloud import  WordCloud
 import sys
+import seaborn as sns
 
 np.set_printoptions(threshold=sys.maxsize)
 
@@ -28,6 +29,24 @@ def pega_musicas():
             musicas.append(musica.find_all("a")[0].get_text())
         i+=1
     return musicas
+
+#criando uma função para printar o número de ouvintes, porém, estou tendo problemas com filtragem - RESOLVER ISSO DEPOIS URGENTEMENTE
+def pega_views():
+    visualizacoes = []
+    i = 1
+    while i <= 10:
+        page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/+tracks?page={i}")
+        soup = BeautifulSoup(page.content, "html.parser")
+        container_visualizacoes = soup.find_all("td", class_ = "chartlist-bar")
+        for view in container_visualizacoes:
+            visualizacoes.append(view.find_all("span", class_ = "chartlist-count-bar-value")[0].get_text())
+        i+=1
+    excecoes = ["\n", "ouvintes", "                    "]
+    for i in visualizacoes:
+        i.strip("\n")
+    return visualizacoes
+
+print(pega_views())
 
 
 #criando um dataframe que pega todas as músicas do scraping e as ordenam
@@ -125,7 +144,7 @@ def df_MI(arrays):
 #df = df_MI(arrays)
 #print(df)
 
-#função para transformar album em dataframe - vou ter q mudar isso ainda para contabilizar palavras no wordlcoud
+#função para transformar album em dataframe
 def albuns_mais_plv():
     palavras = str(pega_albuns()).split()
     lista_palavras = []
@@ -171,3 +190,4 @@ def musicas_mais_plv():
     return wordcloud
 
 #musicas_mais_plv()
+
