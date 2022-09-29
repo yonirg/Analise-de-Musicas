@@ -31,25 +31,24 @@ def pega_musicas():
     return musicas
 
 #criando uma função para printar o número de ouvintes, porém, estou tendo problemas com filtragem - RESOLVER ISSO DEPOIS URGENTEMENTE
-def pega_views():
-    visualizacoes = []
+def pega_ouvir():
+    ouvintes = []
     i = 1
     while i <= 10:
         page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/+tracks?page={i}")
         soup = BeautifulSoup(page.content, "html.parser")
-        container_visualizacoes = soup.find_all("td", class_ = "chartlist-bar")
-        for view in container_visualizacoes:
-            visualizacoes.append(int(view.find_all("span", class_ = "chartlist-count-bar-value")[0].get_text().replace("\n", "").replace(" ", "").replace("ouvintes", "").replace(".", "")))
+        container_ouvintes = soup.find_all("td", class_ = "chartlist-bar")
+        for ouvinte in container_ouvintes:
+            ouvintes.append(int(ouvinte.find_all("span", class_ = "chartlist-count-bar-value")[0].get_text().replace("\n", "").replace(" ", "").replace("ouvintes", "").replace(".", "")))
         i+=1
-    df_ouvir = pd.DataFrame(visualizacoes, columns=["Numero_Ouvintes"])
+    df_ouvir = pd.DataFrame(ouvintes, columns=["Numero_Ouvintes"])
     return df_ouvir
 
-
-print(pega_views())
+#print(pega_ouvir())
 
 
 #criando um dataframe que pega todas as músicas do scraping e as ordenam
-df = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
+df_musicas = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
 #as músicas estão ordenadas de acordo com as mais tocadas, de acordo com o site que realizamos o scraping
 
 #criando uma função para printar a música referente a determinado índice, coloca o número da posiçãod a música, e a função mostrará
@@ -83,7 +82,7 @@ def musica_menos_tocada():
     return
 
 #musica_mais_tocada ()
-#musica_menos_tocada()
+musica_menos_tocada()
 
 #Função que pega todos os álbuns da Imagine Dragons
 def pega_albuns():
