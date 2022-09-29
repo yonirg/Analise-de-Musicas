@@ -1,9 +1,20 @@
 #Importe as bibliotecas e módulos necessários
+from modulefinder import STORE_GLOBAL
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from urllib.parse import quote_plus
+import numpy as np
+import matplotlib.pyplot as plt
+from wordcloud import  WordCloud
+import sys
 
+np.set_printoptions(threshold=sys.maxsize)
+
+pd.set_option("display.max_rows", None)
+pd.set_option("display.max_columns", 10)
+pd.set_option("display.width", None)
+pd.set_option("display.max_colwidth", None)
 
 # Função que pega todas as músicas do Imagine Dragons
 def pega_musicas():
@@ -114,10 +125,48 @@ def df_MI(arrays):
 #print(df)
 
 #função para transformar album em dataframe - vou ter q mudar isso ainda para contabilizar palavras no wordlcoud
-def albuns_df():
-    lista = pega_albuns()
+def albuns_mais_plv():
+    palavras = str(pega_albuns()).split()
+    lista_palavras = []
+    for a in palavras:
+        item = a
+        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ""]:
+            item = item.replace(b, "")
+        lista_palavras.append(item)
+    for a in lista_palavras:
+        if a == "":
+            lista_palavras.remove(a)
     coluna = "Album"
-    df_album = pd.DataFrame(lista, columns=[coluna])
-    return df_album
+    df_album = pd.DataFrame(lista_palavras, columns=[coluna])
+    print(df_album.value_counts())
+    texto = df_album.values
+    wordcloud = WordCloud().generate(str(texto))
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    plt.show()
+    return wordcloud
 
-#print(albuns_df())
+#albuns_mais_plv()
+
+def musicas_mais_plv():
+    palavras = str(pega_musicas()).split()
+    lista_palavras = []
+    for a in palavras:
+        item = a
+        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";"]:
+            item = item.replace(b, "")
+        lista_palavras.append(item)
+    for a in lista_palavras:
+        if a == "":
+            lista_palavras.remove(a)
+    coluna = "Musica"
+    df_musica = pd.DataFrame(lista_palavras, columns=[coluna])
+    print(df_musica.value_counts())
+    texto = df_musica.values
+    wordcloud = WordCloud().generate(str(texto))
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    plt.show()
+    return wordcloud
+
+#musicas_mais_plv()
