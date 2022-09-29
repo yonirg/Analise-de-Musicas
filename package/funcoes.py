@@ -207,6 +207,16 @@ def pega_letras_unicas(data_frame_multiindex):
             letra = str(letra).replace('<div class="cnt-letra p402_premium">','').replace(" <p>", "").replace("<p>", " ").replace("</p>", "").replace("<br/>", " ").replace("<br>", " ").replace("</br>", "").replace("</div>", "")
         finally:    
             lista_letras.append(letra)
-    return lista_letras
-        
+    df_unicas["Letra"] = lista_letras
+    return df_unicas
+
+
+# Função que a adiciona as letras ao dataframe com multiindex
+def letras_df(df, df_unicas):
+    df_unicas = df_unicas.set_index("Musica")
+    left = df_unicas
+    right = df
+    result = left.join(right, how="inner")
+    return result
+
         
