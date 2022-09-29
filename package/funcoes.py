@@ -39,12 +39,11 @@ def pega_views():
         soup = BeautifulSoup(page.content, "html.parser")
         container_visualizacoes = soup.find_all("td", class_ = "chartlist-bar")
         for view in container_visualizacoes:
-            visualizacoes.append(view.find_all("span", class_ = "chartlist-count-bar-value")[0].get_text())
+            visualizacoes.append(int(view.find_all("span", class_ = "chartlist-count-bar-value")[0].get_text().replace("\n", "").replace(" ", "").replace("ouvintes", "").replace(".", "")))
         i+=1
-    excecoes = ["\n", "ouvintes", "                    "]
-    for i in visualizacoes:
-        i.strip("\n")
-    return visualizacoes
+    df_ouvir = pd.DataFrame(visualizacoes, columns=["Numero_Ouvintes"])
+    return df_ouvir
+
 
 print(pega_views())
 
@@ -190,4 +189,3 @@ def musicas_mais_plv():
     return wordcloud
 
 #musicas_mais_plv()
-
