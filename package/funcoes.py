@@ -45,11 +45,6 @@ def pega_ouvir():
 
 #print(pega_ouvir())
 
-
-#criando um dataframe que pega todas as músicas do scraping e as ordenam
-df_musicas = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
-#as músicas estão ordenadas de acordo com as mais tocadas, de acordo com o site que realizamos o scraping
-
 #criando uma função para printar a música referente a determinado índice, coloca o número da posiçãod a música, e a função mostrará
 #Ex: caso eu queira escolher a música mais tocada, n = 1
 def musica_tocada(n):
@@ -71,16 +66,25 @@ def musica_tocada(n):
 
 def musica_mais_tocada():
     #a partir do dataframe, é possível escolher a música mais tocada
+    #as músicas estão ordenadas de acordo com as mais tocadas, de acordo com o site que realizamos o scraping
     print("A música mais tocada é", musica_tocada(1))
-    return
+    df_musicas = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
+    df_ouvir = pd.DataFrame(pega_ouvir(), columns=["Número_Ouvintes"])
+    df_faixas = pd.concat([df_musicas,df_ouvir], axis=1)
+    df_faixas = df_faixas[0:10]
+
+    barras = sns.barplot(x="Músicas", y="Número_Ouvintes", data=df_faixas)
+    plt.show()
+    return barras
 
 def musica_menos_tocada():
     #a partir do dataframe, é possível escolher a música menos tocada
+    df_musicas = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
     df_musicas_inv = df_musicas.tail(1)
     print("A música menos tocada é",df_musicas_inv["Músicas"].iloc[0])
     return
 
-#musica_mais_tocada ()
+#musica_mais_tocada()
 #musica_menos_tocada()
 
 #Função que pega todos os álbuns da Imagine Dragons
