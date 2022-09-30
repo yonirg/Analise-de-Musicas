@@ -11,12 +11,12 @@ import sys
 import seaborn as sns
 
 np.set_printoptions(threshold=sys.maxsize)
-
+'''
 pd.set_option("display.max_rows", None)
 pd.set_option("display.max_columns", 10)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
-
+'''
 # Função que pega todas as músicas do Imagine Dragons
 def pega_musicas():
     musicas = []
@@ -29,7 +29,7 @@ def pega_musicas():
             musicas.append(musica.find_all("a")[0].get_text())
         i+=1
     return musicas
-#criando uma função para printar o número de ouvintes, porém, estou tendo problemas com filtragem - RESOLVER ISSO DEPOIS URGENTEMENTE
+#criando uma função para printar o número de ouvintes, porém, estou tendo problemas com filtragem
 def pega_ouvir():
     ouvintes = []
     i = 1
@@ -56,38 +56,48 @@ def musica_tocada(n):
         elif n < 1:
             raise ValueError("o número de músicas não pode ser nulo ou negativo")
         else:
-            musica_tocada = df["Músicas"].iloc[n-1]
+            df_musicas = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
+            musica_tocada = df_musicas["Músicas"].iloc[n-1]
             return(musica_tocada)
         #localiza o índice da função
     except Exception as error:
         return error
 
-#musica_tocada(-1)
+#musica_tocada(10)
 
 def musica_mais_tocada():
     #a partir do dataframe, é possível escolher a música mais tocada
     #as músicas estão ordenadas de acordo com as mais tocadas, de acordo com o site que realizamos o scraping
     print("A música mais tocada é", musica_tocada(1))
-    df_musicas = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
-    df_ouvir = pd.DataFrame(pega_ouvir(), columns=["Número_Ouvintes"])
-    df_faixas = pd.concat([df_musicas,df_ouvir], axis=1)
-    df_faixas = df_faixas[0:10]
-
-    barras = sns.barplot(x="Músicas", y="Número_Ouvintes", data=df_faixas)
+    df_musicas = pd.DataFrame(pega_musicas(), columns = ["Musicas"])
+    df_ouvir = pd.DataFrame(pega_ouvir(), columns=["Numero_Ouvintes"])
+    df_musicas.reset_index(drop=True, inplace=True)
+    df_ouvir.reset_index(drop=True, inplace=True)
+    df_faixas = pd.concat([df_musicas, df_ouvir], axis=1)
+    print(df_faixas)
+    df_faixas = df_faixas[0:5]
+    barras = sns.barplot(x="Musicas", y="Numero_Ouvintes", data=df_faixas)
     plt.show()
     return barras
 
 def musica_menos_tocada():
     #a partir do dataframe, é possível escolher a música menos tocada
-    df_musicas = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
-    df_ouvir = pd.DataFrame(pega_ouvir(), columns=["Número_Ouvintes"])
-    df_faixas = df_musicas.join(df_ouvir, how="inner")
+    df_musicas = pd.DataFrame(pega_musicas(), columns = ["Musicas"])
+    df_ouvir = pd.DataFrame(pega_ouvir(), columns=["Numero_Ouvintes"])
+    df_musicas.reset_index(drop=True, inplace=True)
+    df_ouvir.reset_index(drop=True, inplace=True)
+    df_faixas = pd.concat([df_musicas, df_ouvir], axis=1)
     df_musicas_inv = df_musicas.tail(1)
-    print("A música menos tocada é",df_musicas_inv["Músicas"].iloc[0])
-    return
+    df_faixas_inv = df_faixas.tail(5)
+    print("A música menos tocada é",df_musicas_inv["Musicas"].iloc[0])
+    barras = sns.barplot(x="Musicas", y="Numero_Ouvintes", data=df_faixas_inv)
+    plt.show()
+    return barras 
 
 #musica_mais_tocada()
 #musica_menos_tocada()
+
+print(musica_menos_tocada())
 
 #Função que pega todos os álbuns da Imagine Dragons
 def pega_albuns():
