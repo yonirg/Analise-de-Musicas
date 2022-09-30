@@ -9,14 +9,14 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import sys
 import seaborn as sns
-"""
+
 np.set_printoptions(threshold=sys.maxsize)
 
 pd.set_option("display.max_rows", None)
 pd.set_option("display.max_columns", 10)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
-"""
+
 # Função que pega todas as músicas do Imagine Dragons
 def pega_musicas():
     musicas = []
@@ -80,6 +80,8 @@ def musica_mais_tocada():
 def musica_menos_tocada():
     #a partir do dataframe, é possível escolher a música menos tocada
     df_musicas = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
+    df_ouvir = pd.DataFrame(pega_ouvir(), columns=["Número_Ouvintes"])
+    df_faixas = df_musicas.join(df_ouvir, how="inner")
     df_musicas_inv = df_musicas.tail(1)
     print("A música menos tocada é",df_musicas_inv["Músicas"].iloc[0])
     return
@@ -182,11 +184,11 @@ def musicas_mais_plv():
     df_musica = pd.DataFrame(lista_palavras, columns=[coluna])
     print(df_musica.value_counts())
     texto = df_musica.values
-    wordcloud = WordCloud().generate(str(texto))
-    plt.imshow(wordcloud)
+    wordcloud_musicas = WordCloud().generate(str(texto))
+    plt.imshow(wordcloud_musicas)
     plt.axis("off")
     plt.show()
-    return wordcloud
+    return wordcloud_musicas
 
 #musicas_mais_plv()
 
@@ -221,11 +223,33 @@ def letras_df(df, df_unicas):
     result = left.join(right, how="inner")
     return result
 
-        
+def letras_mais_plv():
+    letras = str(pega_letras_unicas(df_MI(auxiliar_multi_index(albuns_musicas())))).split()
+    lista_letras = []
+    for a in letras:
+        item = a
+        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";", "\u0435"]:
+            item = item.replace(b, "")
+        lista_letras.append(item)
+    for a in lista_letras:
+        if a == "":
+            lista_letras.remove(a)
+    coluna = "letras"
+    df_letras = pd.DataFrame(lista_letras, columns=[coluna])
+    print(df_letras.value_counts())
+    texto = df_letras.values
+    wordcloud_letras = WordCloud().generate(str(texto))
+    plt.imshow(wordcloud_letras)
+    plt.axis("off")
+    plt.show()
+    return wordcloud_letras
+
+#print(letras_mais_plv())
+
 
 # ### ÁREA DE TESTE
-# arrays = auxiliar_multi_index(albuns_musicas())
-# df = df_MI(arrays)
-# df_unicas = pega_letras_unicas(df)
-# df_final = letras_df(df, df_unicas)
-# print(df_final)
+#arrays = auxiliar_multi_index(albuns_musicas())
+#df = df_MI(arrays)
+#df_unicas = pega_letras_unicas(df)
+#df_final = letras_df(df, df_unicas)
+#print(df_final)
