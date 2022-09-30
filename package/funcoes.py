@@ -97,7 +97,7 @@ def musica_menos_tocada():
 #musica_mais_tocada()
 #musica_menos_tocada()
 
-print(musica_menos_tocada())
+#print(musica_menos_tocada())
 
 #Função que pega todos os álbuns da Imagine Dragons
 def pega_albuns():
@@ -256,6 +256,21 @@ def letras_mais_plv():
 
 #print(letras_mais_plv())
 
+def premios(df):
+    premio = []
+    for album in df:
+        if album == "Evolve":
+            premio.append("2 Prêmio")
+        elif album == "Night Visions":
+            premio.append("1 Prêmio")
+        else:
+            premio.append("0 prêmio")
+    df_premio = pd.DataFrame(premio, columns=["Quantidade de Prêmios"])
+    df_album = pd.DataFrame(df, columns=["Álbuns"])
+    df_premiacoes = pd.concat([df_premio, df_album], axis = 1)
+    return df_premiacoes
+
+print(premios(pega_albuns()))
 
 # ### ÁREA DE TESTE
 #arrays = auxiliar_multi_index(albuns_musicas())
