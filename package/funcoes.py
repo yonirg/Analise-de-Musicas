@@ -25,6 +25,8 @@ def pega_musicas():
         page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/+tracks?page={i}")
         soup = BeautifulSoup(page.content, "html.parser")
         container_musicas = soup.find_all("td", class_= "chartlist-name")
+        with open("x.html","w", encoding="utf-8") as f:
+            f.write(str(soup))
         for musica in container_musicas:
             musicas.append(musica.find_all("a")[0].get_text())
         i+=1
@@ -36,6 +38,8 @@ def pega_ouvir():
     while i <= 10:
         page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/+tracks?page={i}")
         soup = BeautifulSoup(page.content, "html.parser")
+        with open("x.html","w", encoding="utf-8") as f:
+            f.write(str(soup))
         container_ouvintes = soup.find_all("td", class_ = "chartlist-bar")
         for ouvinte in container_ouvintes:
             ouvintes.append(int(ouvinte.find_all("span", class_ = "chartlist-count-bar-value")[0].get_text().replace("\n", "").replace(" ", "").replace("ouvintes", "").replace(".", "")))
@@ -107,6 +111,8 @@ def pega_albuns():
         page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/+albums?page={i}")
         soup = BeautifulSoup(page.content, "html.parser")
         container_albuns = soup.find(id="artist-albums-section").find_all(class_="link-block-target")
+        with open("x.html","w", encoding="utf-8") as f:
+            f.write(str(soup))
         for album in container_albuns:
             albuns.append(album.get_text())
         i+=1
@@ -121,6 +127,8 @@ def albuns_musicas():
         album_codificado = quote_plus(nome_album)
         page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/{album_codificado}")
         soup = BeautifulSoup(page.content, "html.parser")
+        with open("x.html","w", encoding="utf-8") as f:
+            f.write(str(soup))
         try:
             container_musicas_album = soup.find("section", id= "tracklist").find("tbody")
         except AttributeError as error:
@@ -167,10 +175,13 @@ def albuns_mais_plv():
     for a in lista_palavras:
         if a == "":
             lista_palavras.remove(a)
-    coluna = "Album"
+    coluna = "Palavras_Album"
     df_album = pd.DataFrame(lista_palavras, columns=[coluna])
     print(df_album.value_counts())
     texto = df_album.values
+    return texto
+
+def wordcloud_album(texto):
     wordcloud = WordCloud().generate(str(texto))
     plt.imshow(wordcloud)
     plt.axis("off")
@@ -190,10 +201,13 @@ def musicas_mais_plv():
     for a in lista_palavras:
         if a == "":
             lista_palavras.remove(a)
-    coluna = "Musica"
+    coluna = "Palavras_Música"
     df_musica = pd.DataFrame(lista_palavras, columns=[coluna])
     print(df_musica.value_counts())
     texto = df_musica.values
+    return texto
+
+def wordloucd_musica(texto):
     wordcloud_musicas = WordCloud().generate(str(texto))
     plt.imshow(wordcloud_musicas)
     plt.axis("off")
@@ -217,6 +231,8 @@ def pega_letras_unicas(data_frame_multiindex):
             letra = "SEM LETRA"
         else:
             soup = BeautifulSoup(page.content, "html.parser")
+            with open("x.html","w", encoding="utf-8") as f:
+                f.write(str(soup))
             letra = soup.find("div", class_= "cnt-letra p402_premium")
             letra = str(letra).replace('<div class="cnt-letra p402_premium">','').replace(" <p>", "").replace("<p>", " ").replace("</p>", "").replace("<br/>", " ").replace("<br>", " ").replace("</br>", "").replace("</div>", "")
         finally:    
@@ -256,21 +272,81 @@ def letras_mais_plv():
 
 #print(letras_mais_plv())
 
-def premios(df):
-    premio = []
-    for album in df:
-        if album == "Evolve":
-            premio.append("2 Prêmio")
-        elif album == "Night Visions":
-            premio.append("1 Prêmio")
-        else:
-            premio.append("0 prêmio")
-    df_premio = pd.DataFrame(premio, columns=["Quantidade de Prêmios"])
-    df_album = pd.DataFrame(df, columns=["Álbuns"])
-    df_premiacoes = pd.concat([df_premio, df_album], axis = 1)
-    return df_premiacoes
+def pega_premios():
+    premios = []
+    page = requests.get("https://www.imdb.com/name/nm4995251/awards?ref_=nm_awd")
+    soup = BeautifulSoup(page.content, "html.parser")
+    container_premios = soup.find_all("td", class_ = "award_outcome")
+    with open("x.html", "w", encoding="utf-8") as f:
+        f.write(str(soup))
+    for award in container_premios:
+        premios.append(award.find_all("span", class_ = "award_category")[0].get_text())
+    df_premios = pd.DataFrame(premios, columns=["Prêmios"])
+    return df_premios
 
-print(premios(pega_albuns()))
+#print(pega_premios())
+
+def pega_vencedor():
+    vencedor = []
+    page = requests.get("https://www.imdb.com/name/nm4995251/awards?ref_=nm_awd")
+    soup = BeautifulSoup(page.content, "html.parser")
+    container_vencedor = soup.find_all("td", class_ = "award_outcome")
+    with open("x.html", "w", encoding="utf-8") as f:
+        f.write(str(soup))
+    for award in container_vencedor:
+        vencedor.append(award.find_all("b")[0].get_text())
+    df_vencedor = pd.DataFrame(vencedor, columns=["Vencedor"]) 
+    return df_vencedor
+
+#print(pega_vencedor())
+
+def album_vencedor():
+    pega_premios().reset_index(drop=True, inplace=True)
+    pega_vencedor().reset_index(drop=True, inplace=True)
+    vencedor_premio = pd.concat([pega_premios(),pega_vencedor()], axis=1)
+    vencedor_premio = vencedor_premio[vencedor_premio.Vencedor=="Winner"].value_counts()
+    return vencedor_premio
+
+#print(album_vencedor())
+
+#print(premios(pega_albuns()))
+
+def album_in_letras():
+    letras = str(pega_letras_unicas(df_MI(auxiliar_multi_index(albuns_musicas())))).split()
+    lista_letras = []
+    for a in letras:
+        item = a
+        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";", "\u0435"]:
+            item = item.replace(b, "")
+        lista_letras.append(item)
+    for a in lista_letras:
+        if a == "":
+            lista_letras.remove(a)
+    coluna = "letras"
+    df_letras = pd.DataFrame(lista_letras, columns=[coluna])
+    df_musicas = pd.DataFrame(musicas_mais_plv(), columns=["Musica Palavras"])
+    print(str(df_musicas.tolist().isin(df_letras)))
+    return df_letras
+
+album_in_letras()
+
+#print(musicas_mais_plv().tolist())
+
+def musica_in_letras():
+    letras = str(pega_letras_unicas(df_MI(auxiliar_multi_index(albuns_musicas())))).split()
+    lista_letras = []
+    for a in letras:
+        item = a
+        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";", "\u0435"]:
+            item = item.replace(b, "")
+        lista_letras.append(item)
+    for a in lista_letras:
+        if a == "":
+            lista_letras.remove(a)
+    coluna = "letras"
+    df_letras = pd.DataFrame(lista_letras, columns=[coluna])
+    print(df_letras.isin([musicas_mais_plv()]))
+    return
 
 # ### ÁREA DE TESTE
 #arrays = auxiliar_multi_index(albuns_musicas())
