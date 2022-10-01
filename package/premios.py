@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import requests
 from bs4 import BeautifulSoup
 
+
 def pega_premios():
     premios = []
     page = requests.get("https://www.imdb.com/name/nm4995251/awards?ref_=nm_awd")
@@ -19,6 +20,8 @@ def pega_premios():
 
 #print(pega_premios())
 
+
+### Venceram ou só foram nomeados
 def pega_vencedor():
     vencedor = []
     page = requests.get("https://www.imdb.com/name/nm4995251/awards?ref_=nm_awd")
@@ -32,13 +35,13 @@ def pega_vencedor():
     return df_vencedor
 
 #print(pega_vencedor())
-
-def album_vencedor():
+#### Prêmios vencidos e quantidade
+def premio_vencedor():
     pega_premios().reset_index(drop=True, inplace=True)
     pega_vencedor().reset_index(drop=True, inplace=True)
     vencedor_premio = pd.concat([pega_premios(),pega_vencedor()], axis=1)
     vencedor_premio = vencedor_premio[vencedor_premio.Vencedor=="Winner"].value_counts()
     return vencedor_premio
 
-print(album_vencedor())
+print(premio_vencedor())
 
