@@ -1,3 +1,6 @@
 
 *.ipynb
 *.pyc
+__pycache__
+package/x.html
+x.html
