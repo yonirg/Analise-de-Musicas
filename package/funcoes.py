@@ -311,43 +311,6 @@ def numero_vencedor():
 
 #print(premios(pega_albuns()))
 
-def album_in_letras():
-    letras = str(pega_letras_unicas(df_MI(auxiliar_multi_index(albuns_musicas())))).split()
-    lista_letras = []
-    for a in letras:
-        item = a
-        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";", "\u0435"]:
-            item = item.replace(b, "")
-        lista_letras.append(item)
-    for a in lista_letras:
-        if a == "":
-            lista_letras.remove(a)
-    coluna = "letras"
-    df_letras = pd.DataFrame(lista_letras, columns=[coluna])
-    df_musicas = pd.DataFrame(musicas_mais_plv(), columns=["Musica Palavras"])
-    print(str(df_letras.isin(musicas_mais_plv().tolist())))
-    return df_letras
-
-#print(musicas_mais_plv().tolist())
-
-def musica_in_letras():
-    letras = str(pega_letras_unicas(df_MI(auxiliar_multi_index(albuns_musicas())))).split()
-    lista_letras = []
-    for a in letras:
-        item = a
-        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";", "\u0435"]:
-            item = item.replace(b, "")
-        lista_letras.append(item)
-    for a in lista_letras:
-        if a == "":
-            lista_letras.remove(a)
-    coluna = "letras"
-    df_letras = pd.DataFrame(lista_letras, columns=[coluna])
-    print(df_letras.isin([musicas_mais_plv()]))
-    return
-
-#print(musica_in_letras())
-
 # ### ÁREA DE TESTE
 
 def musica_in_letras():
@@ -360,7 +323,7 @@ def musica_in_letras():
 #musica_in_letras()
 
 #função que retorna o número de palavras das músicas, por álbum
-def musicas_in_letras():
+def letras_por_album():
     df_musica_letras = musica_in_letras()
     excecoes = ["Origins (Deluxe)", "Demons (TELYKast Remix)", "Shots (The Funk Hunters Remix)", "Shots (AtellaGali Remix)", "Mercury - Act 1 (Amazon Music Live)", "It's Time (Single Of The Week)", "Clouds (2008 Version) [Demo]"]
     for album in pega_albuns():
@@ -381,4 +344,4 @@ def musicas_in_letras():
         pd.set_option("display.max_columns", 10)
     return
 
-#musicas_in_letras()
+#letras_por_album()
