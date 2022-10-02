@@ -4,3 +4,5 @@
 __pycache__
 package/x.html
 x.html
+package/.cache
+.cache
