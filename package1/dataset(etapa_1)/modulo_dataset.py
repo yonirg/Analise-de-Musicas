@@ -67,10 +67,10 @@ def letras_df(df, df_unicas):
     result = left.join(right, how="inner")
     return result
 
-# Função que adiciona a duração de cada música ao dataset
-def duracao_df(df, df_unicas):
+# Função para obter dados do spotify(pela biblioteca sptipy)
+def dados_spotify(df, df_unicas, dado, info_sobre_mil=False):
     spot = spotipy.Spotify(client_credentials_manager = SpotifyClientCredentials(client_id="b4947e8ba35742f98848a458991a967b", client_secret="47f7c73973e34c7bb3a820921b00d13e"))
-    lista_duracao = []
+    lista_info = []
     for musica in df_unicas["Musica"]:
         try:
             busca = spot.search(musica)
@@ -80,20 +80,35 @@ def duracao_df(df, df_unicas):
             except ConnectionError:
                 busca = spot.search(musica)
         except Exception:
-            duracao = "Nan"
+            info = "Nan"
             continue
         try:
             musica_atual = busca["tracks"]["items"][0]
         except IndexError as error:
-            duracao = "Nan"
+            info = "Nan"
         else:
-            duracao = musica_atual["duration_ms"]/1000
+            info = musica_atual[dado]
         finally:
-            lista_duracao.append(duracao)
-    final = auxiliar_duracao(df, df_unicas, lista_duracao)
+            if info_sobre_mil and info!="Nan":
+                info = info/1000
+            lista_info.append(info)
+    final = auxiliar_spotify(df, df_unicas, lista_info, dado)
     return final
-    
 
+# Função que adiciona a duração de cada música ao dataset
+def duracao_df(df, df_unicas):
+    df_duracao = dados_spotify(df, df_unicas, dado="duration_ms", info_sobre_mil=True)
+    return df_duracao
+
+def popularidade_df(df, df_unicas):
+    df_popularidade = dados_spotify(df, df_unicas, dado="popularity")
+    return df_popularidade
+
+
+def apagar_colunas(df, lista_colunas):
+    for coluna in lista_colunas:
+        df.drop(coluna, axis=1, inplace=True)
+    return df
 
 
 #*************************************************************** FUNÇÕES AUXILIARES***************************************************************#
@@ -139,10 +154,9 @@ def auxiliar_letras(musica, musica_convertida, lista_letras):
     return lista_letras
 
 
-def auxiliar_duracao(df, df_unicas, lista_duracao):
-    df_unicas["Duracao(seg)"] = lista_duracao
+def auxiliar_spotify(df, df_unicas, lista_info, dado):
+    df_unicas[dado] = lista_info
     left = df_unicas.set_index("Musica")
     right = df
     final = left.join(right, how="inner", rsuffix='right')
-    final.drop("Letraright", axis=1, inplace=True)
     return final
