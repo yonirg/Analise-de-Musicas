@@ -300,12 +300,12 @@ def pega_vencedor():
 
 #print(pega_vencedor())
 
-def album_vencedor():
+def numero_vencedor():
     pega_premios().reset_index(drop=True, inplace=True)
     pega_vencedor().reset_index(drop=True, inplace=True)
     vencedor_premio = pd.concat([pega_premios(),pega_vencedor()], axis=1)
-    vencedor_premio = vencedor_premio[vencedor_premio.Vencedor=="Winner"].value_counts()
-    return vencedor_premio
+    numero_premio = vencedor_premio[vencedor_premio.Vencedor=="Winner"].value_counts()
+    return numero_premio
 
 #print(album_vencedor())
 
@@ -325,10 +325,8 @@ def album_in_letras():
     coluna = "letras"
     df_letras = pd.DataFrame(lista_letras, columns=[coluna])
     df_musicas = pd.DataFrame(musicas_mais_plv(), columns=["Musica Palavras"])
-    print(str(df_musicas.tolist().isin(df_letras)))
+    print(str(df_letras.isin(musicas_mais_plv().tolist())))
     return df_letras
-
-album_in_letras()
 
 #print(musicas_mais_plv().tolist())
 
@@ -348,9 +346,30 @@ def musica_in_letras():
     print(df_letras.isin([musicas_mais_plv()]))
     return
 
+#print(musica_in_letras())
+
 # ### ÁREA DE TESTE
-#arrays = auxiliar_multi_index(albuns_musicas())
-#df = df_MI(arrays)
-#df_unicas = pega_letras_unicas(df)
-#df_final = letras_df(df, df_unicas)
-#print(df_final)
+
+def musica_in_letras():
+    arrays = auxiliar_multi_index(albuns_musicas())
+    df = df_MI(arrays)
+    df_unicas = pega_letras_unicas(df)
+    df_final = letras_df(df, df_unicas)
+    return df_final
+
+#musica_in_letras()
+
+def musicas_in_letras():
+    df_musica_letras = musica_in_letras()
+    excecoes = ["Origins (Deluxe)", "Demons (TELYKast Remix)", "Shots (The Funk Hunters Remix)", "Shots (AtellaGali Remix)", "Mercury - Act 1 (Amazon Music Live)", "It's Time (Single Of The Week)", "Clouds (2008 Version) [Demo]"]
+    for album in pega_albuns():
+        if album in excecoes:
+            print(f"o {album} não possui músicas contidas dentro dele")
+            pass
+        else:
+            print(album, df_musica_letras.loc[album, :], "\n\n", 40*"#","\n\n")
+            df_musica_album = df_musica_letras.loc[album, :]
+            print(str(df_musica_album.loc[:, "Letra"].value_counts()))
+    return
+
+musicas_in_letras()

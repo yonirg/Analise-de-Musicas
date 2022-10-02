@@ -31,6 +31,18 @@ def pega_vencedor():
     df_vencedor = pd.DataFrame(vencedor, columns=["Vencedor"]) 
     return df_vencedor
 
+def pega_ano_vencedor():
+    vencedor = []
+    page = requests.get("https://www.imdb.com/name/nm4995251/awards?ref_=nm_awd")
+    soup = BeautifulSoup(page.content, "html.parser")
+    container_vencedor = soup.find_all("table", class_ = "awards")
+    with open("x.html", "w", encoding="utf-8") as f:
+        f.write(str(soup))
+    for award in container_vencedor:
+        vencedor.append(award.find_all("td")[0].get_text().replace("\n", "").replace(" ", ""))
+    df_ano_vencedor = pd.DataFrame(vencedor, columns=["Ano Vencedor"]) 
+    return df_ano_vencedor
+
 #print(pega_vencedor())
 
 def album_vencedor():
@@ -40,5 +52,6 @@ def album_vencedor():
     vencedor_premio = vencedor_premio[vencedor_premio.Vencedor=="Winner"].value_counts()
     return vencedor_premio
 
-print(album_vencedor())
+#print(album_vencedor())
+
 
