@@ -10,4 +10,7 @@ df_unicas = mds.pega_letras_unicas(dataframe)
 
 dataframe_com_letras = mds.letras_df(dataframe, df_unicas)
 
+dataframe_com_duracao = mds.duracao_df(dataframe_com_letras, df_unicas)
+print(dataframe_com_duracao)
+
 
