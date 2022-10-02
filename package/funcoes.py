@@ -359,6 +359,7 @@ def musica_in_letras():
 
 #musica_in_letras()
 
+#função que retorna o número de palavras das músicas, por álbum
 def musicas_in_letras():
     df_musica_letras = musica_in_letras()
     excecoes = ["Origins (Deluxe)", "Demons (TELYKast Remix)", "Shots (The Funk Hunters Remix)", "Shots (AtellaGali Remix)", "Mercury - Act 1 (Amazon Music Live)", "It's Time (Single Of The Week)", "Clouds (2008 Version) [Demo]"]
@@ -367,9 +368,17 @@ def musicas_in_letras():
             print(f"o {album} não possui músicas contidas dentro dele")
             pass
         else:
-            print(album, df_musica_letras.loc[album, :], "\n\n", 40*"#","\n\n")
             df_musica_album = df_musica_letras.loc[album, :]
-            print(str(df_musica_album.loc[:, "Letra"].value_counts()))
+            letra = (str(df_musica_album.loc[:, "Letra"])).split(" ")
+            filtro =  ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";", "\n", "\t", "...\nName:"]
+            for i in letra:
+                if i == filtro:
+                    letra.remove(i)
+            df_letras = pd.DataFrame(letra, columns=["Letra"])
+            df_contar = df_letras.value_counts()
+            print("\n\n",album, df_contar.iloc[1: ], "\n\n", "_"*40)
+        pd.set_option("display.max_rows", 10)
+        pd.set_option("display.max_columns", 10)
     return
 
-musicas_in_letras()
+#musicas_in_letras()
