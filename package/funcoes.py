@@ -105,6 +105,8 @@ def musica_menos_tocada():
     plt.show()
     return barras 
 
+
+
 ##########################################################################################################
 
 #musica_mais_tocada()
@@ -262,6 +264,7 @@ def letras_df(df, df_unicas):
     result = left.join(right, how="inner")
     return result
 
+# Responde a pergunta 4 do grupo 2
 def letras_mais_plv():
     letras = str(pega_letras_unicas(df_MI(auxiliar_multi_index(albuns_musicas())))).split()
     lista_letras = []
@@ -275,13 +278,13 @@ def letras_mais_plv():
             lista_letras.remove(a)
     coluna = "letras"
     df_letras = pd.DataFrame(lista_letras, columns=[coluna])
-    print(df_letras.value_counts())
+    palavras_mais_comuns_letra = df_letras.value_counts()
     texto = df_letras.values
     wordcloud_letras = WordCloud().generate(str(texto))
     plt.imshow(wordcloud_letras)
     plt.axis("off")
     plt.show()
-    return wordcloud_letras
+    return palavras_mais_comuns_letra, wordcloud_letras
 
 #print(letras_mais_plv())
 
