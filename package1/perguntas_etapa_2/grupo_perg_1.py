@@ -1,6 +1,7 @@
 import funcoes as fun
 
 
+# Resposta da pergunta 1
 
 
 
@@ -13,6 +14,7 @@ import funcoes as fun
 
 
 
+# Resposta da pergunta 2
 
 
 

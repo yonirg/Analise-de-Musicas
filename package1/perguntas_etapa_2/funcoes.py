@@ -3,10 +3,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 import seaborn as sns
+import sys
 from bs4 import BeautifulSoup
 from wordcloud import WordCloud
+import pathlib
 
-from ..dataset_etapa_1_.modulo_dataset import pega_letras_unicas, df_MI, auxiliar_multi_index, albuns_musicas
+caminho = pathlib.Path().absolute()
+
+sys.path.insert(0, f"{caminho}\package1\dataset_etapa_1")
+from modulo_dataset import pega_letras_unicas, df_MI, auxiliar_multi_index, albuns_musicas, pega_albuns
 
 
 ### GRUPO 1 DE PERGUNTAS
@@ -118,8 +123,11 @@ def wordcloud_album(texto):
     wordcloud = WordCloud().generate(str(texto))
     plt.imshow(wordcloud)
     plt.axis("off")
-    plt.show()
-    return wordcloud
+    plt.show(block=False)
+    plt.pause(6)
+    plt.close()
+    plt.savefig()
+    return ""
 
 
 
@@ -146,7 +154,10 @@ def letras_mais_plv():
     wordcloud_letras = WordCloud().generate(str(texto))
     plt.imshow(wordcloud_letras)
     plt.axis("off")
-    plt.show()
+    plt.show(block=False)
+    plt.pause(6)
+    plt.close()
+    plt.savefig()
     return palavras_mais_comuns_letra, wordcloud_letras
 
 

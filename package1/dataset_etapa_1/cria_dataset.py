@@ -18,7 +18,9 @@ dataset = mds.apagar_colunas(dataframe_com_popularidade,["duration_msright", "Le
 dataset = dataset.rename(columns={"duration_ms":"Duracao(seg)"})
 dataset = dataset.rename(columns={"popularity":"Popularidade"})
 
-print(dataset)
+dataset_com_ouvintes = mds.ouvintes_por_album(dataset)
+
+print(dataset_com_ouvintes)
 
 
 

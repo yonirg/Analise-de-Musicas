@@ -109,6 +109,27 @@ def apagar_colunas(df, lista_colunas):
     for coluna in lista_colunas:
         df.drop(coluna, axis=1, inplace=True)
     return df
+    
+
+def ouvintes_por_album(dataset):
+    df_indices = dataset.reset_index()
+    albuns = df_indices["Album"].unique()
+    conjunto_ouvintes = []
+
+    for nome_album in albuns:
+        if "+" in nome_album:
+            nome_album = nome_album.replace("+", "%2B")
+        album_codificado = quote_plus(nome_album)
+        page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/{album_codificado}")
+        soup = BeautifulSoup(page.content, "html.parser")
+        try:
+            container_musicas_album = soup.find("section", id= "tracklist").find("tbody")
+        except AttributeError as error:
+            #print(f"Sem músicas no Álbum {nome_album}  Erro: {error}")
+            continue
+        auxiliar_ouvintes_por_album(container_musicas_album, conjunto_ouvintes, dataset)
+    dataset["Ouvintes"] = conjunto_ouvintes
+    return dataset
 
 
 #*************************************************************** FUNÇÕES AUXILIARES***************************************************************#
@@ -160,3 +181,11 @@ def auxiliar_spotify(df, df_unicas, lista_info, dado):
     right = df
     final = left.join(right, how="inner", rsuffix='right')
     return final
+
+
+def auxiliar_ouvintes_por_album(container_musicas_album, conjunto_ouvintes, dataset):
+    musicas_album = container_musicas_album.find_all('tr')
+    for musica_album in musicas_album:
+        num_ouvintes = musica_album.find("td", class_="chartlist-bar").find("span", class_="chartlist-count-bar-value").get_text()
+        conjunto_ouvintes.append(num_ouvintes.replace("\n", "").replace(" ", "").replace("ouvintes", "").replace(".", ""))
+    
