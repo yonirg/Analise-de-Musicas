@@ -240,7 +240,6 @@ def pega_letras_unicas(data_frame_multiindex):
     df_unicas["Letra"] = lista_letras
     return df_unicas
 
-
 # Função que a adiciona as letras ao dataframe com multiindex
 def letras_df(df, df_unicas):
     df_unicas = df_unicas.set_index("Musica")
@@ -249,19 +248,37 @@ def letras_df(df, df_unicas):
     result = left.join(right, how="inner")
     return result
 
+#função que gera o multiindex
+def musica_com_letras():
+    arrays = auxiliar_multi_index(albuns_musicas())
+    df = df_MI(arrays)
+    df_unicas = pega_letras_unicas(df)
+    df_final = letras_df(df, df_unicas)
+    return df_final
+
+#função que mostra o número de palavras nas letras das músicas e suas quantidades
 def letras_mais_plv():
-    letras = str(pega_letras_unicas(df_MI(auxiliar_multi_index(albuns_musicas())))).split()
-    lista_letras = []
+    letras = (musica_com_letras().reset_index())
+    letras = np.array([letras.loc[:, "Letra"]])
+    letras = str(list(letras)).split()
+    lista=[]
     for a in letras:
-        item = a
-        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";", "\u0435"]:
-            item = item.replace(b, "")
-        lista_letras.append(item)
-    for a in lista_letras:
-        if a == "":
-            lista_letras.remove(a)
-    coluna = "letras"
-    df_letras = pd.DataFrame(lista_letras, columns=[coluna])
+        if a == r"\u0435":
+            letras.replace(a, "")
+        elif a in [",",":","[","]",".",";","/","dtype=object","array",")","(","-"]:
+            letras.replace(a, "")
+        else:
+            a.lower()
+            lista.append(a)
+    df_letras = pd.DataFrame(lista, columns=["Letra"])
+    print(df_letras.value_counts().iloc[0:30])
+    return df_letras
+
+print(letras_mais_plv())
+
+#função que gera um wordcloud a partir do número de palavras das músicas
+def letras_wordcloud():
+    df_letras = letras_mais_plv()
     print(df_letras.value_counts())
     texto = df_letras.values
     wordcloud_letras = WordCloud().generate(str(texto))
@@ -270,7 +287,7 @@ def letras_mais_plv():
     plt.show()
     return wordcloud_letras
 
-#print(letras_mais_plv())
+letras_wordcloud()
 
 def pega_premios():
     premios = []
@@ -309,22 +326,20 @@ def numero_vencedor():
 
 #print(album_vencedor())
 
-#print(premios(pega_albuns()))
-
 # ### ÁREA DE TESTE
 
-def musica_in_letras():
+def musica_com_letras():
     arrays = auxiliar_multi_index(albuns_musicas())
     df = df_MI(arrays)
     df_unicas = pega_letras_unicas(df)
     df_final = letras_df(df, df_unicas)
     return df_final
 
-#musica_in_letras()
+#musica_com_letras()
 
 #função que retorna o número de palavras das músicas, por álbum
 def letras_por_album():
-    df_musica_letras = musica_in_letras()
+    df_musica_letras = musica_com_letras()
     excecoes = ["Origins (Deluxe)", "Demons (TELYKast Remix)", "Shots (The Funk Hunters Remix)", "Shots (AtellaGali Remix)", "Mercury - Act 1 (Amazon Music Live)", "It's Time (Single Of The Week)", "Clouds (2008 Version) [Demo]"]
     for album in pega_albuns():
         if album in excecoes:
@@ -345,3 +360,15 @@ def letras_por_album():
     return
 
 #letras_por_album()
+
+def album_in_letras():
+    df_letras = letras_mais_plv() 
+    lista_album = str(pega_albuns()).split
+    df_album_in_letras = df_letras[df_letras["letras"]==lista_album]
+    return df_album_in_letras
+
+#print(letras_mais_plv())
+
+
+def musicas_in_letras():
+    return
