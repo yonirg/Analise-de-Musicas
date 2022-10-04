@@ -7,10 +7,13 @@ import sys
 from bs4 import BeautifulSoup
 from wordcloud import WordCloud
 import pathlib
-
-caminho = pathlib.Path().absolute()
-
-sys.path.insert(0, f"{caminho}\package1\dataset_etapa_1")
+import numpy as np
+# caminho = pathlib.Path()
+# for pasta in caminho:
+#     print(pasta)
+#print(caminho)
+caminho_dataset = sys.path[0].replace("perguntas_etapa_2", "dataset_etapa_1")
+sys.path.insert(0, caminho_dataset)
 from modulo_dataset import pega_letras_unicas, df_MI, auxiliar_multi_index, albuns_musicas, pega_albuns
 
 
@@ -126,7 +129,7 @@ def wordcloud_album(texto):
     plt.show(block=False)
     plt.pause(6)
     plt.close()
-    plt.savefig()
+    plt.savefig("palavras_mais_comuns_nos_albuns")
     return ""
 
 
@@ -135,30 +138,43 @@ def wordcloud_album(texto):
 
 
 # PERGUNTA 4
+dict_albuns_musicas = albuns_musicas()
+
+arrays = auxiliar_multi_index(dict_albuns_musicas)
+
+dataframe = df_MI(arrays)
+
+df_unicas = pega_letras_unicas(dataframe)
 
 def letras_mais_plv():
-    letras = str(pega_letras_unicas(df_MI(auxiliar_multi_index(albuns_musicas())))).split()
-    lista_letras = []
+    letras = (df_unicas.reset_index())
+    letras = np.array([letras.loc[:, "Letra"]])
+    letras = str(list(letras)).split()
+    lista=[]
     for a in letras:
-        item = a
-        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";", "\u0435"]:
-            item = item.replace(b, "")
-        lista_letras.append(item)
-    for a in lista_letras:
-        if a == "":
-            lista_letras.remove(a)
-    coluna = "letras"
-    df_letras = pd.DataFrame(lista_letras, columns=[coluna])
-    palavras_mais_comuns_letra = df_letras.value_counts()
+        if a == r"\u0435":
+            letras.replace(a, "")
+        elif a in [",",":","[","]",".",";","/","dtype=object","array",")","(","-"]:
+            letras.replace(a, "")
+        else:
+            a.lower()
+            lista.append(a)
+    df_letras = pd.DataFrame(lista, columns=["Letra"])
+    print(df_letras.value_counts().iloc[0:30])
+    return df_letras
+    
+
+def letras_wordcloud():
+    df_letras = letras_mais_plv()
+    print(df_letras.value_counts())
     texto = df_letras.values
     wordcloud_letras = WordCloud().generate(str(texto))
-    plt.imshow(wordcloud_letras)
-    plt.axis("off")
     plt.show(block=False)
     plt.pause(6)
     plt.close()
-    plt.savefig()
-    return palavras_mais_comuns_letra, wordcloud_letras
+    plt.savefig("palavras_mais_comuns_nas_letras")
+    return wordcloud_letras
+
 
 
 #*************************************************************** FUNÇÕES AUXILIARES***************************************************************#
