@@ -23,8 +23,8 @@ print(nuvem_palavras_comuns_album)
 
 #Resposta da perguna 4
 print("\n\nWordCloud das palavras mais comuns nas letras das músicas(Aguarde, a imagem será aberta)\n\n")
-palavras_mais_comuns_letra, wordcloud_letras = fun.letras_mais_plv()
-
+fun.letras_wordcloud()
+palavras_mais_comuns_letra = fun.letras_mais_plv()
 print(f"Número de vezes que cada palavra aparece nas letras das músicas:\n\n{palavras_mais_comuns_letra}")
 
 
