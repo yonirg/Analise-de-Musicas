@@ -21,10 +21,37 @@ from modulo_dataset import pega_letras_unicas, df_MI, auxiliar_multi_index, albu
 
 
 #PERGUNTA 1
+# Retorna um dicionário de até as 5 músicas mais ouvidas por álbum
+def mais_ouvintes_por_album(dataset_com_ouvintes, dataframe):
+    dict_mais_ouvidas = {}
+    dataset_com_ouvintes['Ouvintes_sem_nulos']=dataset_com_ouvintes.Ouvintes.apply(lambda x: np.where(x.isdigit(),x,'0'))
+    for album in dataframe.reset_index()["Album"].unique():
+        ouvintes_musicas = dataset_com_ouvintes.loc[album]["Ouvintes_sem_nulos"]
+        nome_musica = ouvintes_musicas.astype(int).sort_values(ascending=False).index.values[:5]
+        num_ouvintes = ouvintes_musicas.astype(int).sort_values(ascending=False).iloc[:5]
+        dicionario_musicas = {}
+        i=0
+        while i<= len(nome_musica)-1:
+            dicionario_musicas[nome_musica[i]] = num_ouvintes[i]
+            i+=1
+        dict_mais_ouvidas[album] =dicionario_musicas
+    return dict_mais_ouvidas
 
-
-
-
+# Retorna um dicionário de até as 5 músicas menos ouvidas por álbum
+def menos_ouvintes_por_album(dataset_com_ouvintes, dataframe):
+    dict_menos_ouvidas = {}
+    dataset_com_ouvintes['Ouvintes_sem_nulos']=dataset_com_ouvintes.Ouvintes.apply(lambda x: np.where(x.isdigit(),x,'0'))
+    for album in dataframe.reset_index()["Album"].unique():
+        ouvintes_musicas = dataset_com_ouvintes.loc[album]["Ouvintes_sem_nulos"]
+        nome_musica = ouvintes_musicas.astype(int).sort_values(ascending=True).index.values[:5]
+        num_ouvintes = ouvintes_musicas.astype(int).sort_values(ascending=True).iloc[:5]
+        dicionario_musicas = {}
+        i=0
+        while i<= len(nome_musica)-1:
+            dicionario_musicas[nome_musica[i]] = num_ouvintes[i]
+            i+=1
+        dict_menos_ouvidas[album] =dicionario_musicas
+    return dict_menos_ouvidas
 
 
 
