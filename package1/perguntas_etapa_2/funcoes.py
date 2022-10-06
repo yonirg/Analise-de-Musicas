@@ -60,8 +60,40 @@ def menos_ouvintes_por_album(dataset_com_ouvintes, dataframe):
 
 
 # PERGUNTA 2
+# Retorna um dicionário de até as 5 músicas mais curtas por álbum
+def mais_curtas_por_album(dataset_com_ouvintes, dataframe):
+    dict_mais_curtas = {}
+    dataset_com_ouvintes.rename(columns={"Duracao(seg)": "Duracao"}, inplace=True)
+    dataset_com_ouvintes['Duracao_sem_nulos']=dataset_com_ouvintes.Duracao.apply(lambda x: np.where(str(x).replace(".", "", 1).isdigit(),x,'0'))
+    for album in dataframe.reset_index()["Album"].unique():
+        ouvintes_musicas = dataset_com_ouvintes.loc[album]["Duracao_sem_nulos"]
+        nome_musica = ouvintes_musicas.astype(float).sort_values(ascending=True).index.values[:5]
+        num_ouvintes = ouvintes_musicas.astype(float).sort_values(ascending=True).iloc[:5]
+        dicionario_musicas = {}
+        i=0
+        while i<= len(nome_musica)-1:
+            dicionario_musicas[nome_musica[i]] = num_ouvintes[i]
+            i+=1
+        dict_mais_curtas[album] =dicionario_musicas
+    return dict_mais_curtas
 
 
+# Retorna um dicionário de até as 5 músicas mais longas por álbum
+def menos_curtas_por_album(dataset_com_ouvintes, dataframe):
+    dict_menos_curtas = {}
+    dataset_com_ouvintes.rename(columns={"Duracao(seg)": "Duracao"}, inplace=True)
+    dataset_com_ouvintes['Duracao_sem_nulos']=dataset_com_ouvintes.Duracao.apply(lambda x: np.where(str(x).replace(".", "", 1).isdigit(),x,'0'))
+    for album in dataframe.reset_index()["Album"].unique():
+        ouvintes_musicas = dataset_com_ouvintes.loc[album]["Duracao_sem_nulos"]
+        nome_musica = ouvintes_musicas.astype(float).sort_values(ascending=False).index.values[:5]
+        num_ouvintes = ouvintes_musicas.astype(float).sort_values(ascending=False).iloc[:5]
+        dicionario_musicas = {}
+        i=0
+        while i<= len(nome_musica)-1:
+            dicionario_musicas[nome_musica[i]] = num_ouvintes[i]
+            i+=1
+        dict_menos_curtas[album] =dicionario_musicas
+    return dict_menos_curtas
 
 
 
