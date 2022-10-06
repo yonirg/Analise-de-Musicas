@@ -14,7 +14,26 @@ import numpy as np
 #print(caminho)
 caminho_dataset = sys.path[0].replace("perguntas_etapa_2", "dataset_etapa_1")
 sys.path.insert(0, caminho_dataset)
-from modulo_dataset import pega_letras_unicas, df_MI, auxiliar_multi_index, albuns_musicas, pega_albuns
+from modulo_dataset import pega_letras_unicas, df_MI, auxiliar_multi_index, albuns_musicas, pega_albuns,letras_df, duracao_df, popularidade_df, apagar_colunas, ouvintes_por_album
+
+dict_albuns_musicas = albuns_musicas()
+
+arrays = auxiliar_multi_index(dict_albuns_musicas)
+
+dataframe = df_MI(arrays)
+
+df_unicas = pega_letras_unicas(dataframe)
+
+dataframe_com_letras = letras_df(dataframe, df_unicas)
+
+dataframe_com_duracao = duracao_df(dataframe_com_letras, df_unicas)
+
+dataframe_com_popularidade = popularidade_df(dataframe_com_duracao, df_unicas)
+
+dataset = apagar_colunas(dataframe_com_popularidade,["duration_msright", "Letraright"])
+dataset = dataset.rename(columns={"duration_ms":"Duracao(seg)"})
+dataset = dataset.rename(columns={"popularity":"Popularidade"})
+dataset_com_ouvintes = ouvintes_por_album(dataset)
 
 
 ### GRUPO 1 DE PERGUNTAS
@@ -117,7 +136,10 @@ def musica_mais_tocada():
     #print(df_faixas)
     df_faixas = df_faixas[0:5]
     barras = sns.barplot(x="Musicas", y="Numero_Ouvintes", data=df_faixas)
-    plt.show()
+    plt.show(block=False)
+    plt.pause(6)
+    plt.close()
+    plt.savefig("musicas_mais_tocadas")
     return barras
 
 def musica_menos_tocada():
@@ -131,7 +153,10 @@ def musica_menos_tocada():
     df_faixas_inv = df_faixas.tail(5)
     print("A música menos tocada é",df_musicas_inv["Musicas"].iloc[0])
     barras = sns.barplot(x="Musicas", y="Numero_Ouvintes", data=df_faixas_inv)
-    plt.show()
+    plt.show(block=False)
+    plt.pause(6)
+    plt.close()
+    plt.savefig("musicas_menos_tocadas")
     return barras 
 
 
@@ -197,13 +222,6 @@ def wordcloud_album(texto):
 
 
 # PERGUNTA 4
-dict_albuns_musicas = albuns_musicas()
-
-arrays = auxiliar_multi_index(dict_albuns_musicas)
-
-dataframe = df_MI(arrays)
-
-df_unicas = pega_letras_unicas(dataframe)
 
 def letras_mais_plv():
     letras = (df_unicas.reset_index())
