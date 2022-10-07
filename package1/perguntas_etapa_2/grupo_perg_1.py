@@ -1,15 +1,16 @@
 import funcoes as fun
 import pandas as pd
-# Resposta da pergunta 1
-"""
-#Músicas com mais ouvintes por álbum:
-mais_ouvintes = fun.mais_ouvintes_por_album(fun.dataset_com_ouvintes, fun.dataframe)
-print(mais_ouvintes)
 
+from dataframes_prontos import dataframe, dataset_com_ouvintes
+# Resposta da pergunta 1
+
+#Músicas com mais ouvintes por álbum:
+mais_ouvintes = fun.mais_ouvintes_por_album(dataset_com_ouvintes, dataframe)
+print(mais_ouvintes)
 
 #Músicas com menos ouvintes por álbum:
 
-menos_ouvintes = fun.menos_ouvintes_por_album(fun.dataset_com_ouvintes, fun.dataframe)
+menos_ouvintes = fun.menos_ouvintes_por_album(dataset_com_ouvintes, dataframe)
 print(menos_ouvintes)
 
 
@@ -21,13 +22,13 @@ print(menos_ouvintes)
 
 #Músicas com mais duração por álbum:
 
-mais_longas = fun.menos_curtas_por_album(fun.dataset_com_ouvintes, fun.dataframe)
+mais_longas = fun.menos_curtas_por_album(dataset_com_ouvintes, dataframe)
 print(mais_longas)
 
 
 #Músicas com menos duração por álbum:
 
-mais_curtas = fun.mais_curtas_por_album(fun.dataset_com_ouvintes, fun.dataframe)
+mais_curtas = fun.mais_curtas_por_album(dataset_com_ouvintes, dataframe)
 print(mais_curtas)
 
 
@@ -40,11 +41,10 @@ mais_ouvida_geral = fun.musica_mais_tocada()
 print("*****   TOP 5 MÚSICAS MENOS OUVIDAS    *****\n\n")
 menos_ouvida_geral = fun.musica_menos_tocada()
 
-"""
 
 
 # Resposta da pergunta 4
-dataframe_duracao = fun.dataset_com_ouvintes.rename(columns={"Duracao(seg)":"Duracao"})
+dataframe_duracao = dataset_com_ouvintes.rename(columns={"Duracao(seg)":"Duracao"})
 dataframe_duracao = dataframe_duracao[dataframe_duracao.Duracao != "Nan"]
 dataframe_duracao_menor = dataframe_duracao['Duracao'].astype(int).sort_values(ascending=True)[:7]
 dataframe_duracao_menor = pd.DataFrame(dataframe_duracao_menor).reset_index().drop("Album", axis=1).drop_duplicates()
