@@ -14,26 +14,7 @@ import numpy as np
 #print(caminho)
 caminho_dataset = sys.path[0].replace("perguntas_etapa_2", "dataset_etapa_1")
 sys.path.insert(0, caminho_dataset)
-from modulo_dataset import pega_letras_unicas, df_MI, auxiliar_multi_index, albuns_musicas, pega_albuns,letras_df, duracao_df, popularidade_df, apagar_colunas, ouvintes_por_album
-
-dict_albuns_musicas = albuns_musicas()
-
-arrays = auxiliar_multi_index(dict_albuns_musicas)
-
-dataframe = df_MI(arrays)
-
-df_unicas = pega_letras_unicas(dataframe)
-
-dataframe_com_letras = letras_df(dataframe, df_unicas)
-
-dataframe_com_duracao = duracao_df(dataframe_com_letras, df_unicas)
-
-dataframe_com_popularidade = popularidade_df(dataframe_com_duracao, df_unicas)
-
-dataset = apagar_colunas(dataframe_com_popularidade,["duration_msright", "Letraright"])
-dataset = dataset.rename(columns={"duration_ms":"Duracao(seg)"})
-dataset = dataset.rename(columns={"popularity":"Popularidade"})
-dataset_com_ouvintes = ouvintes_por_album(dataset)
+from modulo_dataset import pega_albuns
 
 
 ### GRUPO 1 DE PERGUNTAS
@@ -43,7 +24,11 @@ dataset_com_ouvintes = ouvintes_por_album(dataset)
 # Retorna um dicionário de até as 5 músicas mais ouvidas por álbum
 def mais_ouvintes_por_album(dataset_com_ouvintes, dataframe):
     dict_mais_ouvidas = {}
-    dataset_com_ouvintes['Ouvintes_sem_nulos']=dataset_com_ouvintes.Ouvintes.apply(lambda x: np.where(x.isdigit(),x,'0'))
+    dataset_com_ouvintes = dataset_com_ouvintes[dataset_com_ouvintes.Ouvintes != "Nan"]
+    dataset_com_ouvintes.dropna(inplace=True)
+    dataset_com_ouvintes["Ouvintes"] = dataset_com_ouvintes["Ouvintes"].astype(int)
+    #print(dataset_com_ouvintes)
+    dataset_com_ouvintes['Ouvintes_sem_nulos']=dataset_com_ouvintes.Ouvintes.apply(lambda x: np.where(str(x).isdigit(),x,'0'))
     for album in dataframe.reset_index()["Album"].unique():
         ouvintes_musicas = dataset_com_ouvintes.loc[album]["Ouvintes_sem_nulos"]
         nome_musica = ouvintes_musicas.astype(int).sort_values(ascending=False).index.values[:5]
@@ -59,7 +44,7 @@ def mais_ouvintes_por_album(dataset_com_ouvintes, dataframe):
 # Retorna um dicionário de até as 5 músicas menos ouvidas por álbum
 def menos_ouvintes_por_album(dataset_com_ouvintes, dataframe):
     dict_menos_ouvidas = {}
-    dataset_com_ouvintes['Ouvintes_sem_nulos']=dataset_com_ouvintes.Ouvintes.apply(lambda x: np.where(x.isdigit(),x,'0'))
+    dataset_com_ouvintes['Ouvintes_sem_nulos']=dataset_com_ouvintes.Ouvintes.apply(lambda x: np.where(str(x).isdigit(),x,'0'))
     for album in dataframe.reset_index()["Album"].unique():
         ouvintes_musicas = dataset_com_ouvintes.loc[album]["Ouvintes_sem_nulos"]
         nome_musica = ouvintes_musicas.astype(int).sort_values(ascending=True).index.values[:5]
