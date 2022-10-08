@@ -361,11 +361,12 @@ def letras_por_album():
 
 def album_in_letras():
     df_letras = letras_mais_plv() 
-    lista_album = str(pega_albuns()).split
+    lista_album = str(list(pega_albuns())).split
+    print(lista_album)
     df_album_in_letras = df_letras[df_letras["Letra"]==lista_album]
     return df_album_in_letras
 
-#print(album_in_letras())
+#album_in_letras()
 
 
 def musicas_in_letras():
@@ -373,3 +374,13 @@ def musicas_in_letras():
     lista_musica = str(pega_musicas()).split
     df_musica_in_letras = df_letras[df_letras["Letra"]==lista_musica]
     return df_musica_in_letras
+
+#função que retorna a quantidade de prêmios que os albuns ganharam
+def premios_album():
+    dados = {"Album" : ["Night Visions", "Evolve", "Evolve"], "Premio" : ["Top Rock Album","Alternative Rock Album of the Year","Top Rock Album"]}
+    df_album_prem = pd.DataFrame(dados)
+    contagem = df_album_prem["Album"].value_counts()
+    return contagem
+
+#print(premios_album())
+
