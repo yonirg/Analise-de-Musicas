@@ -96,52 +96,7 @@ def printRAW(*texto):
     RAWOut.close()
     return
 
-def auxiliar_multi_index(dict_albuns_musicas):
-    lista_index1 = []
-    for item in dict_albuns_musicas:
-        for vezes in range(len(dict_albuns_musicas[item])):
-            lista_index1.append(item)
-    lista_index2 = []
-    for chave in dict_albuns_musicas:
-        lista_index2 += dict_albuns_musicas[chave]    
-    arrays = [lista_index1, lista_index2]
-    return arrays
 
-#Cria DataFrame com  MultiIndex
-def df_MI(arrays):
-    multi_index = pd.MultiIndex.from_arrays(arrays, names=('Album', 'Musica'))
-    df = pd.DataFrame(index=multi_index)
-    return df
-
-def pega_letras_unicas(data_frame_multiindex):
-    new_df = data_frame_multiindex.reset_index()
-    df_unicas = pd.DataFrame(new_df["Musica"].unique(), columns=["Musica"])
-    lista_letras=[]
-    for musica in df_unicas["Musica"]:
-        musica_convertida = musica.lower().replace(" ", "-").replace("(", "").replace(')',"").replace("'", "").replace("/","")
-        try:
-            page = requests.get(f"https://www.letras.mus.br/imagine-dragons/{musica_convertida}/")
-        except Exception as error:
-            print(f"não foi possível buscar a letra da música {musica} devido a grande quantidade de redirecionamentos")
-            print(f"Erro: {error}")
-            letra = "SEM LETRA"
-        else:
-            soup = BeautifulSoup(page.content, "html.parser")
-            with open("x.html","w", encoding="utf-8") as f:
-                f.write(str(soup))
-            letra = soup.find("div", class_= "cnt-letra p402_premium")
-            letra = str(letra).replace('<div class="cnt-letra p402_premium">','').replace(" <p>", "").replace("<p>", " ").replace("</p>", "").replace("<br/>", " ").replace("<br>", " ").replace("</br>", "").replace("</div>", "")
-        finally:    
-            lista_letras.append(letra)
-    df_unicas["Letra"] = lista_letras
-    return df_unicas
-
-def letras_df(df, df_unicas):
-    df_unicas = df_unicas.set_index("Musica")
-    left = df_unicas
-    right = df
-    result = left.join(right, how="inner")
-    return result
 
 ######################################## GRUPO 1 DE PERGUNTAS ########################################
 
@@ -179,7 +134,7 @@ def grafico_mais_ouvinte_por_album(dict_mais_ouvidas):
     return lista
 """
 
-print(grafico_mais_ouvinte_por_album(mais_ouvintes_por_album(dataset_com_ouvintes, dataframe)))
+#print(grafico_mais_ouvinte_por_album(mais_ouvintes_por_album(dataset_com_ouvintes, dataframe)))
 
 
 
@@ -256,10 +211,10 @@ def musica_mais_tocada():
     #print(df_faixas)
     df_faixas = df_faixas[0:5]
     barras = sns.barplot(x="Musicas", y="Numero_Ouvintes", data=df_faixas)
+    plt.savefig("musicas_mais_tocadas")
     plt.show(block=False)
     plt.pause(6)
     plt.close()
-    plt.savefig("musicas_mais_tocadas")
     return barras
 
 def musica_menos_tocada():
@@ -273,10 +228,10 @@ def musica_menos_tocada():
     df_faixas_inv = df_faixas.tail(5)
     print("A música menos tocada é",df_musicas_inv["Musicas"].iloc[0])
     barras = sns.barplot(x="Musicas", y="Numero_Ouvintes", data=df_faixas_inv)
+    plt.savefig("musicas_menos_tocadas")
     plt.show(block=False)
     plt.pause(6)
     plt.close()
-    plt.savefig("musicas_menos_tocadas")
     return barras 
 
 
@@ -309,17 +264,17 @@ def albuns_mais_plv():
     df_album = pd.DataFrame(lista, columns=[coluna])
     palavras_mais_comuns = df_album.value_counts()
     texto = df_album.values
-    printRAW(palavras_mais_comuns)
-    return texto
+    #printRAW(palavras_mais_comuns)
+    return  texto, palavras_mais_comuns
 
 def wordcloud_album(texto):
     wordcloud = WordCloud().generate(str(texto))
     plt.imshow(wordcloud)
     plt.axis("off")
+    plt.savefig("palavras_mais_comuns_nos_albuns")
     plt.show(block=False)
     plt.pause(6)
     plt.close()
-    plt.savefig("palavras_mais_comuns_nos_albuns")
     return ""
 
 #PERGUNTA 2
@@ -334,15 +289,18 @@ def musicas_mais_plv():
             lista_palavras.remove(a)
     coluna = "Palavras_Música"
     df_musica = pd.DataFrame(lista_palavras, columns=[coluna])
-    print(df_musica.value_counts())
+    #print(df_musica.value_counts())
     texto = df_musica.values
-    return texto
+    return (texto, df_musica.value_counts())
 
-def wordloucd_musica(texto):
+def wordcloud_musica(texto):
     wordcloud_musicas = WordCloud().generate(str(texto))
+    plt.savefig("palavras_mais_comuns_nos_titulos_musicas")
     plt.imshow(wordcloud_musicas)
     plt.axis("off")
-    plt.show()
+    #plt.show(block=False)
+    plt.pause(6)
+    plt.close()
     return wordcloud_musicas
 
 
@@ -393,12 +351,12 @@ def letras_wordcloud(df_letras):
     np.set_printoptions(threshold=sys.maxsize)
     texto = df_letras.values
     wordcloud_letras = WordCloud().generate(str(texto))
-    plt.show()
+    #plt.show()
+    plt.savefig("palavras_mais_comuns_nas_letras")
     plt.imshow(wordcloud_letras)
     plt.axis("off")
     plt.pause(6)
     plt.close()
-    plt.savefig("palavras_mais_comuns_nas_letras")
     return wordcloud_letras
 
 #letras_wordcloud()

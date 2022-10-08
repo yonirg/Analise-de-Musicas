@@ -4,18 +4,22 @@ import funcoes as fun
 #Resposta da perguna 1
 """
 
-texto, palavras_mais_comuns = fun.albuns_mais_plv()
+texto_albuns, palavras_mais_comuns_albuns = fun.albuns_mais_plv()
 
-print(f"Número de vezes que cada palavra aparece nos álbuns:\n\n{palavras_mais_comuns}")
+print(f"\n\n\n\nNúmero de vezes que cada palavra aparece nos álbuns:\n\n{palavras_mais_comuns_albuns}")
 
-print("\n\nWordCloud das palavras mais comuns nos nomes dos álbuns\n\n")
-nuvem_palavras_comuns_album = fun.wordcloud_album(texto)
-print(nuvem_palavras_comuns_album)
+print("\n\n\n\nWordCloud das palavras mais comuns nos nomes dos álbuns\n\n")
+nuvem_palavras_comuns_album = fun.wordcloud_album(texto_albuns)
+#print(nuvem_palavras_comuns_album)
 
 
 #Resposta da perguna 2
 """
+texto_musicas, palavras_mais_comuns_nomes_musicas = fun.musicas_mais_plv()
 
+print(f"\n\n\n\nNúmero de vezes que cada palavra aparece nos nomes das músicas:\n\n{palavras_mais_comuns_nomes_musicas}")
+print("\n\n\n\nWordCloud das palavras mais comuns nos nomes das músicas\n\n")
+nuvem_palavras_comuns_nomes_musicas = fun.wordcloud_musica(texto_musicas)
 
 
 #Resposta da perguna 3

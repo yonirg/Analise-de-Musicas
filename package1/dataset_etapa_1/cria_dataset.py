@@ -10,7 +10,7 @@ dataframe = mds.df_MI(arrays)
 df_unicas = mds.pega_letras_unicas(dataframe)
 
 dataframe_com_letras = mds.letras_df(dataframe, df_unicas)
-"""
+
 
 dataframe_com_duracao = mds.duracao_df(dataframe_com_letras, df_unicas)
 
@@ -21,7 +21,7 @@ dataset = dataset.rename(columns={"duration_ms":"Duracao(seg)"})
 dataset = dataset.rename(columns={"popularity":"Popularidade"})
 dataset_final = mds.ouvintes_por_album(dataset)
 print(dataset_final)
-"""
+
 
 #USADO PARA CIRAR CSV's DOS DATAFRAMES E ACELERAR A UTILIZAÇÃO DAS FUNÇÕES DO PROJETO
 
