@@ -3,7 +3,6 @@ import pandas as pd
 import requests
 import seaborn as sns
 import sys
-print(sys.path)
 from bs4 import BeautifulSoup
 from wordcloud import WordCloud
 import pathlib
