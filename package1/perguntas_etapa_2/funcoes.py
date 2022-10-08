@@ -374,11 +374,23 @@ def letra_in_album():
 #printRAW(albuns_mais_plv()) #array
 
 # PERGUNTA 6
-def letra_in_musica():
-    df_letras = letras_mais_plv() 
-    lista_musica = str(pega_musicas()).split
-    df_musica_in_letras = df_letras[df_letras["Letra"]==lista_musica]
-    return df_musica_in_letras
+def recorrencia_nome_musica(df_unicas):
+    df_unicas = df_unicas.reset_index()
+    i=0
+    lista_recorrencia_nome_musica = []
+    for musica in df_unicas["Musica"]:
+        if "(" in musica:
+            #Tratar casos em que o título da música está com parenteses
+            musica = re.sub(r'\([^()]*\)', '', musica)
+        else:
+            pass
+        esta_ou_nao = musica.lower() in df_unicas["Letra"].iloc[i]
+        lista_recorrencia_nome_musica.append(esta_ou_nao)
+        i+=1
+    df_recorrencia_nome_musica = df_unicas.copy()
+    df_recorrencia_nome_musica["recorrencia_nome_musica"] = lista_recorrencia_nome_musica
+    df_recorrencia_nome_musica.drop(["Album", "Duracao(seg)", "Popularidade", "Ouvintes"], axis=1, inplace=True)
+    return df_recorrencia_nome_musica
 
 
 #*************************************************************** FUNÇÕES AUXILIARES***************************************************************#
