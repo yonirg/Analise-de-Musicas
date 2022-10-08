@@ -1,6 +1,6 @@
 
 import funcoes as fun
-from dataframes_prontos import df_unicas
+from dataframes_prontos import df_unicas, dataframe_com_letras
 import matplotlib.pyplot as plt
 #Resposta da perguna 1
 
@@ -40,7 +40,16 @@ print(f"Número de vezes que cada palavra aparece nas letras das músicas:\n\n{c
 
 
 #Resposta da perguna 5
-
+print("\n\n\n\nRecorrência do nome do álbum na letra\n\n\n\n")
+df_recorrencia_nome_album = fun.recorrencia_nome_album(dataframe_com_letras)
+print("\n\n\n\n")
+print(df_recorrencia_nome_album["recorrencia_nome_album"].value_counts())
+label = ["Album da música recorrente na letra", "Album da música não recorrente na letra"]
+pizza_recor_musica = plt.pie(df_recorrencia_nome_album["recorrencia_nome_album"].value_counts(), labels=label)
+plt.savefig("recorrencia_albuns__letras")
+plt.show(block=False)
+plt.pause(6)
+plt.close()
 
 
 

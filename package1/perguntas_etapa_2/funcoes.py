@@ -11,6 +11,7 @@ import re
 from urllib.parse import quote_plus
 
 
+
 caminho_dataset = sys.path[0].replace("perguntas_etapa_2", "dataset_etapa_1")
 sys.path.insert(0, caminho_dataset)
 from dataframes_prontos import dataset_com_ouvintes,dataframe
@@ -134,7 +135,6 @@ def grafico_mais_ouvinte_por_album(dict_mais_ouvidas):
 """
 
 #print(grafico_mais_ouvinte_por_album(mais_ouvintes_por_album(dataset_com_ouvintes, dataframe)))
-
 
 
 # Retorna um dicionário de até as 5 músicas menos ouvidas por álbum
@@ -362,16 +362,23 @@ def letras_wordcloud(df_letras):
 
 # PERGUNTA 5
 
-def letra_in_album():
-    df_letras = letras_mais_plv() 
-    lista_album = str(list(pega_albuns())).split
-    df_letras = df_letras.isin([lista_album])
-    df_album_in_letras = df_letras[df_letras["Letra"]==lista_album]
-    return df_album_in_letras
-#df.isin({'num_wings': [0, 3]})
-#printRAW(pega_musicas())
-#print(letra_in_album())
-#printRAW(albuns_mais_plv()) #array
+def recorrencia_nome_album(dtaframe_com_letras):
+    i=0
+    lista_recorrencia_nome_album = []
+    for album in dtaframe_com_letras["Album"]:
+        if "(" in album:
+            #Tratar casos em que o título da música está com parenteses
+            album = re.sub(r'\([^()]*\)', '', album)
+        else:
+            pass
+        esta_ou_nao = album.lower() in dtaframe_com_letras["Letra"].iloc[i]
+        lista_recorrencia_nome_album.append(esta_ou_nao)
+        i+=1
+    df_recorrencia_nome_album = dtaframe_com_letras.copy()
+    df_recorrencia_nome_album["recorrencia_nome_album"] = lista_recorrencia_nome_album
+    df_recorrencia_nome_album.drop("Musica", axis=1, inplace=True)
+    return df_recorrencia_nome_album
+
 
 # PERGUNTA 6
 def recorrencia_nome_musica(df_unicas):
