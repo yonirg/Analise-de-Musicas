@@ -25,7 +25,7 @@ nuvem_palavras_comuns_nomes_musicas = fun.wordcloud_musica(texto_musicas)
 
 #Resposta da perguna 3
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  REVER   @@@@@@@@@@@@@@@@@@@@@@@@@
-fun.letras_por_album()
+#fun.letras_por_album()
 
 
 

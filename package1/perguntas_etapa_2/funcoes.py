@@ -287,8 +287,11 @@ def musicas_mais_plv():
         if a == "":
             lista_palavras.remove(a)
     coluna = "Palavras_Música"
+    pd.set_option("display.max_rows", None)
+    pd.set_option("display.max_columns", 10)
+    pd.set_option("display.width", None)
+    pd.set_option("display.max_colwidth", None)
     df_musica = pd.DataFrame(lista_palavras, columns=[coluna])
-    #print(df_musica.value_counts())
     texto = df_musica.values
     return (texto, df_musica.value_counts())
 
