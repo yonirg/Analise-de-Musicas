@@ -3,6 +3,7 @@ import funcoes as fun
 import pandas as pd
 import matplotlib.pyplot as plt
 from dataframes_prontos import dataframe, dataset_com_ouvintes
+from funcoes import premios_album
 import seaborn as sns
 # Resposta da pergunta 1
 
@@ -97,8 +98,10 @@ plt.savefig("maior_duracao_geral")
 
 
 
+#Pergunta 5
 
-
+premios = premios_album()
+print(premios)
 
 
 

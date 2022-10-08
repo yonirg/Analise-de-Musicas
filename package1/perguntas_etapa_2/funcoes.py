@@ -285,3 +285,11 @@ def musica_tocada(n):
         #localiza o índice da função
     except Exception as error:
         return error
+
+
+#função que retorna a quantidade de prêmios que os albuns ganharam
+def premios_album():
+    dados = {"Album" : ["Night Visions", "Evolve", "Evolve"], "Premio" : ["Top Rock Album","Alternative Rock Album of the Year","Top Rock Album"]}
+    df_album_prem = pd.DataFrame(dados)
+    contagem = df_album_prem["Album"].value_counts()
+    return contagem
