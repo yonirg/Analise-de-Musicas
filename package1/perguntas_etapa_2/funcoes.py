@@ -150,16 +150,9 @@ def musica_menos_tocada():
 
 
 
-# PERGUNTA 5
 
 
 
-
-
-
-
-
-# PERGUNTA 6
 
 
 
