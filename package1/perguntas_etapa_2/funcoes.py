@@ -1,9 +1,9 @@
-
 import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 import seaborn as sns
 import sys
+print(sys.path)
 from bs4 import BeautifulSoup
 from wordcloud import WordCloud
 import pathlib
@@ -11,12 +11,14 @@ import numpy as np
 import re
 from urllib.parse import quote_plus
 
+
+caminho_dataset = sys.path[0].replace("perguntas_etapa_2", "dataset_etapa_1")
+sys.path.insert(0, caminho_dataset)
+from dataframes_prontos import dataset_com_ouvintes,dataframe
 # caminho = pathlib.Path()
 # for pasta in caminho:
 #     print(pasta)
 #print(caminho)
-caminho_dataset = sys.path[0].replace("perguntas_etapa_2", "dataset_etapa_1")
-sys.path.insert(0, caminho_dataset)
 #from modulo_dataset import pega_albuns
 from dataframes_prontos import dataframe_com_letras
 
@@ -86,6 +88,7 @@ def musica_tocada(n):
     except Exception as error:
         return error
 
+#função utilizada para resolevr o problema de Unicode
 def printRAW(*texto):
     RAWOut = open(1, "w", encoding="utf8", closefd=False)
     print(*texto, file=RAWOut)
@@ -109,7 +112,6 @@ def df_MI(arrays):
     multi_index = pd.MultiIndex.from_arrays(arrays, names=('Album', 'Musica'))
     df = pd.DataFrame(index=multi_index)
     return df
-
 
 def pega_letras_unicas(data_frame_multiindex):
     new_df = data_frame_multiindex.reset_index()
@@ -164,6 +166,23 @@ def mais_ouvintes_por_album(dataset_com_ouvintes, dataframe):
         dict_mais_ouvidas[album] =dicionario_musicas
     return dict_mais_ouvidas
 
+def grafico_mais_ouvinte_por_album(dict_mais_ouvidas):
+    df = pd.DataFrame.from_dict(dict_mais_ouvidas, orient="index").stack().to_frame()
+    df = pd.DataFrame(df[0].values.tolist(), index = df.index)
+    df = str(df.values.tolist()).split()
+    lista=[]
+    for valor in df:
+        valor=re.sub(r"[$/\]","",valor)
+        lista.append(valor)
+    filtro = re.compile("[\w+]")
+    lista = list(filter(filtro.match, df))
+    return lista
+    
+
+print(grafico_mais_ouvinte_por_album(mais_ouvintes_por_album(dataset_com_ouvintes, dataframe)))
+
+
+
 # Retorna um dicionário de até as 5 músicas menos ouvidas por álbum
 def menos_ouvintes_por_album(dataset_com_ouvintes, dataframe):
     dict_menos_ouvidas = {}
@@ -183,12 +202,6 @@ def menos_ouvintes_por_album(dataset_com_ouvintes, dataframe):
             i+=1
         dict_menos_ouvidas[album] =dicionario_musicas
     return dict_menos_ouvidas
-
-
-
-
-
-
 
 # PERGUNTA 2
 # Retorna um dicionário de até as 5 músicas mais curtas por álbum
@@ -335,7 +348,25 @@ def wordloucd_musica(texto):
 
 
 #PERGUNTA 3
-
+def letras_por_album():
+    df_musica_letras = musica_com_letras()
+    excecoes = ["Origins (Deluxe)", "Demons (TELYKast Remix)", "Shots (The Funk Hunters Remix)", "Shots (AtellaGali Remix)", "Mercury - Act 1 (Amazon Music Live)", "It's Time (Single Of The Week)", "Clouds (2008 Version) [Demo]"]
+    for album in pega_albuns():
+        if album in excecoes:
+            print(f"o {album} não possui músicas contidas dentro dele")
+            pass
+        else:
+            df_musica_letras = df_musica_letras.reset_index()
+            df_musica_album = df_musica_letras.loc[album, :]
+            letra = list(str(df_musica_album.loc[:, "Letra"]).split(" "))
+            filtro =  re.compile("/w+")
+            letra = list(filter(filtro.match, letra))
+            df_letras = pd.DataFrame(letra, columns=["Letra"]).drop_duplicates(subset=["Album"], keep=False)
+            df_contar = df_letras.value_counts()
+            print("\n\n",album.encode("utf-8"), df_contar.iloc[1: ], "\n\n", "_"*40)
+        pd.set_option("display.max_rows", 10)
+        pd.set_option("display.max_columns", 10)
+    return
 
 # PERGUNTA 4
 
