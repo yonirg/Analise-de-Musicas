@@ -6,7 +6,7 @@ from dataframes_prontos import dataframe, dataset_com_ouvintes
 from funcoes import premios_album
 import seaborn as sns
 # Resposta da pergunta 1
-
+"""
 #Músicas com mais ouvintes por álbum:
 print("\n\n\n\nMúsicas com mais ouvintes por álbum\n\n\n\n")
 mais_ouvintes = fun.mais_ouvintes_por_album(dataset_com_ouvintes, dataframe)
@@ -51,7 +51,7 @@ print("*****   AGUARDE UM MOMENTO, O GRÁFICO SERÁ EXIBIDO POR 6 SEGUNDOS E EM 
 
 menos_ouvida_geral = fun.musica_menos_tocada()
 
-
+"""
 
 # Resposta da pergunta 4
 print("\n\n\n\nTOP 5 com menor duração de todas as músicas\n\n\n\n")
@@ -103,7 +103,7 @@ plt.savefig("maior_duracao_geral")
 premios = premios_album()
 print(premios)
 
-
+"""
 
 
 # Pergunta 6
@@ -120,3 +120,4 @@ plt.show(block=False)
 plt.pause(6)
 plt.close()
 plt.savefig("relacao_duracao_ouvintes")
+"""

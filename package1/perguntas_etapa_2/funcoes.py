@@ -8,16 +8,140 @@ from bs4 import BeautifulSoup
 from wordcloud import WordCloud
 import pathlib
 import numpy as np
+import re
+from urllib.parse import quote_plus
+
 # caminho = pathlib.Path()
 # for pasta in caminho:
 #     print(pasta)
 #print(caminho)
 caminho_dataset = sys.path[0].replace("perguntas_etapa_2", "dataset_etapa_1")
 sys.path.insert(0, caminho_dataset)
-from modulo_dataset import pega_albuns
+#from modulo_dataset import pega_albuns
+from dataframes_prontos import dataframe_com_letras
+
+#*************************************************************** FUNÇÕES AUXILIARES***************************************************************#
+# Função que pega todas as músicas do Imagine Dragons
+def pega_musicas():
+    musicas = []
+    i=1
+    while i<=10:
+        page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/+tracks?page={i}")
+        soup = BeautifulSoup(page.content, "html.parser")
+        container_musicas = soup.find_all("td", class_= "chartlist-name")
+        with open("x.html","w", encoding="utf-8") as f:
+            f.write(str(soup))
+        for musica in container_musicas:
+            musicas.append(musica.find_all("a")[0].get_text())
+        i+=1
+    return musicas
+
+def pega_albuns():
+    albuns = []
+    i=1
+    while i<=7:
+        page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/+albums?page={i}")
+        soup = BeautifulSoup(page.content, "html.parser")
+        container_albuns = soup.find(id="artist-albums-section").find_all(class_="link-block-target")
+        with open("x.html","w", encoding="utf-8") as f:
+            f.write(str(soup))
+        for album in container_albuns:
+            albuns.append(album.get_text())
+        i+=1
+    return albuns
 
 
-### GRUPO 1 DE PERGUNTAS
+def pega_ouvir():
+    ouvintes = []
+    i = 1
+    while i <= 10:
+        page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/+tracks?page={i}")
+        soup = BeautifulSoup(page.content, "html.parser")
+        with open("x.html","w", encoding="utf-8") as f:
+            f.write(str(soup))
+        container_ouvintes = soup.find_all("td", class_ = "chartlist-bar")
+        for ouvinte in container_ouvintes:
+            ouvintes.append(int(ouvinte.find_all("span", class_ = "chartlist-count-bar-value")[0].get_text().replace("\n", "").replace(" ", "").replace("ouvintes", "").replace(".", "")))
+        i+=1
+    df_ouvir = pd.DataFrame(ouvintes, columns=["Numero_Ouvintes"])
+    return df_ouvir
+
+
+#criando uma função para printar a música referente a determinado índice, coloca o número da posiçãod a música, e a função mostrará
+#Ex: caso eu queira escolher a música mais tocada, n = 1
+
+def musica_tocada(n):
+    try:
+        if type(n) == float:
+            raise TypeError("o número da música não pode ser em decimal")
+        if n > 500:
+            raise ValueError("não há mais de 500 músicas, escolha um número menor")
+        elif n < 1:
+            raise ValueError("o número de músicas não pode ser nulo ou negativo")
+        else:
+            df_musicas = pd.DataFrame(pega_musicas(), columns = ["Músicas"])
+            musica_tocada = df_musicas["Músicas"].iloc[n-1]
+            return(musica_tocada)
+        #localiza o índice da função
+    except Exception as error:
+        return error
+
+def printRAW(*texto):
+    RAWOut = open(1, "w", encoding="utf8", closefd=False)
+    print(*texto, file=RAWOut)
+    RAWOut.flush()
+    RAWOut.close()
+    return
+
+def auxiliar_multi_index(dict_albuns_musicas):
+    lista_index1 = []
+    for item in dict_albuns_musicas:
+        for vezes in range(len(dict_albuns_musicas[item])):
+            lista_index1.append(item)
+    lista_index2 = []
+    for chave in dict_albuns_musicas:
+        lista_index2 += dict_albuns_musicas[chave]    
+    arrays = [lista_index1, lista_index2]
+    return arrays
+
+#Cria DataFrame com  MultiIndex
+def df_MI(arrays):
+    multi_index = pd.MultiIndex.from_arrays(arrays, names=('Album', 'Musica'))
+    df = pd.DataFrame(index=multi_index)
+    return df
+
+
+def pega_letras_unicas(data_frame_multiindex):
+    new_df = data_frame_multiindex.reset_index()
+    df_unicas = pd.DataFrame(new_df["Musica"].unique(), columns=["Musica"])
+    lista_letras=[]
+    for musica in df_unicas["Musica"]:
+        musica_convertida = musica.lower().replace(" ", "-").replace("(", "").replace(')',"").replace("'", "").replace("/","")
+        try:
+            page = requests.get(f"https://www.letras.mus.br/imagine-dragons/{musica_convertida}/")
+        except Exception as error:
+            print(f"não foi possível buscar a letra da música {musica} devido a grande quantidade de redirecionamentos")
+            print(f"Erro: {error}")
+            letra = "SEM LETRA"
+        else:
+            soup = BeautifulSoup(page.content, "html.parser")
+            with open("x.html","w", encoding="utf-8") as f:
+                f.write(str(soup))
+            letra = soup.find("div", class_= "cnt-letra p402_premium")
+            letra = str(letra).replace('<div class="cnt-letra p402_premium">','').replace(" <p>", "").replace("<p>", " ").replace("</p>", "").replace("<br/>", " ").replace("<br>", " ").replace("</br>", "").replace("</div>", "")
+        finally:    
+            lista_letras.append(letra)
+    df_unicas["Letra"] = lista_letras
+    return df_unicas
+
+def letras_df(df, df_unicas):
+    df_unicas = df_unicas.set_index("Musica")
+    left = df_unicas
+    right = df
+    result = left.join(right, how="inner")
+    return result
+
+######################################## GRUPO 1 DE PERGUNTAS ########################################
 
 
 #PERGUNTA 1
@@ -104,11 +228,6 @@ def menos_curtas_por_album(dataset_com_ouvintes, dataframe):
 
 
 
-
-
-
-
-
 # PERGUNTA 3
 
 
@@ -172,11 +291,13 @@ def albuns_mais_plv():
         if a == "":
             lista_palavras.remove(a)
     coluna = "Palavras_Album"
-    df_album = pd.DataFrame(lista_palavras, columns=[coluna])
+    filtro=re.compile("[\w+]")
+    lista = list(filter(filtro.match, lista_palavras))
+    df_album = pd.DataFrame(lista, columns=[coluna])
     palavras_mais_comuns = df_album.value_counts()
     texto = df_album.values
-    return texto, palavras_mais_comuns
-
+    printRAW(palavras_mais_comuns)
+    return texto
 
 def wordcloud_album(texto):
     wordcloud = WordCloud().generate(str(texto))
@@ -188,42 +309,88 @@ def wordcloud_album(texto):
     plt.savefig("palavras_mais_comuns_nos_albuns")
     return ""
 
+#PERGUNTA 2
+def musicas_mais_plv():
+    palavras = str(pega_musicas()).split()
+    lista_palavras = []
+    for a in palavras:
+        item = re.sub("[^A-Za-z0-9]+", "", a)
+        lista_palavras.append(item)
+    for a in lista_palavras:
+        if a == "":
+            lista_palavras.remove(a)
+    coluna = "Palavras_Música"
+    df_musica = pd.DataFrame(lista_palavras, columns=[coluna])
+    print(df_musica.value_counts())
+    texto = df_musica.values
+    return texto
+
+def wordloucd_musica(texto):
+    wordcloud_musicas = WordCloud().generate(str(texto))
+    plt.imshow(wordcloud_musicas)
+    plt.axis("off")
+    plt.show()
+    return wordcloud_musicas
 
 
 
+#PERGUNTA 3
 
 
 # PERGUNTA 4
 
 def letras_mais_plv():
-    letras = (df_unicas.reset_index())
+    letras = (dataframe_com_letras.reset_index())
     letras = np.array([letras.loc[:, "Letra"]])
     letras = str(list(letras)).split()
     lista=[]
     for a in letras:
         if a == r"\u0435":
             letras.replace(a, "")
-        elif a in [",",":","[","]",".",";","/","dtype=object","array",")","(","-"]:
-            letras.replace(a, "")
         else:
-            a.lower()
-            lista.append(a)
+            item = re.sub("[^A-Za-z0-9]+", "", a)
+            lista.append(item)
+    filtro =re.compile("[\w+]")
+    lista = list(filter(filtro.match, lista))
     df_letras = pd.DataFrame(lista, columns=["Letra"])
-    print(df_letras.value_counts().iloc[0:30])
-    return df_letras
-    
+    for value in df_letras.values:
+        value = np.array(str(value).lower())
+    return (df_letras, df_letras.value_counts().iloc[0:30])
 
-def letras_wordcloud():
-    df_letras = letras_mais_plv()
-    print(df_letras.value_counts())
+
+def letras_wordcloud(df_letras):
+    np.set_printoptions(threshold=sys.maxsize)
     texto = df_letras.values
     wordcloud_letras = WordCloud().generate(str(texto))
-    plt.show(block=False)
+    plt.show()
+    plt.imshow(wordcloud_letras)
+    plt.axis("off")
     plt.pause(6)
     plt.close()
     plt.savefig("palavras_mais_comuns_nas_letras")
     return wordcloud_letras
 
+#letras_wordcloud()
+
+# PERGUNTA 5
+
+def letra_in_album():
+    df_letras = letras_mais_plv() 
+    lista_album = str(list(pega_albuns())).split
+    df_letras = df_letras.isin([lista_album])
+    df_album_in_letras = df_letras[df_letras["Letra"]==lista_album]
+    return df_album_in_letras
+#df.isin({'num_wings': [0, 3]})
+#printRAW(pega_musicas())
+#print(letra_in_album())
+#printRAW(albuns_mais_plv()) #array
+
+# PERGUNTA 6
+def letra_in_musica():
+    df_letras = letras_mais_plv() 
+    lista_musica = str(pega_musicas()).split
+    df_musica_in_letras = df_letras[df_letras["Letra"]==lista_musica]
+    return df_musica_in_letras
 
 
 #*************************************************************** FUNÇÕES AUXILIARES***************************************************************#
