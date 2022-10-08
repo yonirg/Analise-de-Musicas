@@ -27,7 +27,6 @@ def mais_ouvintes_por_album(dataset_com_ouvintes, dataframe):
     dataset_com_ouvintes = dataset_com_ouvintes[dataset_com_ouvintes.Ouvintes != "Nan"]
     dataset_com_ouvintes.dropna(inplace=True)
     dataset_com_ouvintes["Ouvintes"] = dataset_com_ouvintes["Ouvintes"].astype(int)
-    #print(dataset_com_ouvintes)
     dataset_com_ouvintes['Ouvintes_sem_nulos']=dataset_com_ouvintes.Ouvintes.apply(lambda x: np.where(str(x).isdigit(),x,'0'))
     for album in dataframe.reset_index()["Album"].unique():
         ouvintes_musicas = dataset_com_ouvintes.loc[album]["Ouvintes_sem_nulos"]
@@ -44,6 +43,10 @@ def mais_ouvintes_por_album(dataset_com_ouvintes, dataframe):
 # Retorna um dicionário de até as 5 músicas menos ouvidas por álbum
 def menos_ouvintes_por_album(dataset_com_ouvintes, dataframe):
     dict_menos_ouvidas = {}
+    dataset_com_ouvintes = dataset_com_ouvintes[dataset_com_ouvintes.Ouvintes != "Nan"]
+    dataset_com_ouvintes.dropna(inplace=True)
+    dataset_com_ouvintes["Ouvintes"] = dataset_com_ouvintes["Ouvintes"].astype(int)
+    dataset_com_ouvintes = dataset_com_ouvintes[dataset_com_ouvintes.Ouvintes != 0]
     dataset_com_ouvintes['Ouvintes_sem_nulos']=dataset_com_ouvintes.Ouvintes.apply(lambda x: np.where(str(x).isdigit(),x,'0'))
     for album in dataframe.reset_index()["Album"].unique():
         ouvintes_musicas = dataset_com_ouvintes.loc[album]["Ouvintes_sem_nulos"]
@@ -143,15 +146,6 @@ def musica_menos_tocada():
     plt.close()
     plt.savefig("musicas_menos_tocadas")
     return barras 
-
-
-
-
-
-
-# PERGUNTA 4
-
-
 
 
 
