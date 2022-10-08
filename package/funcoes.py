@@ -1,4 +1,5 @@
 #Importe as bibliotecas e módulos necessários
+from base64 import encode
 from modulefinder import STORE_GLOBAL
 import requests
 from bs4 import BeautifulSoup
@@ -9,6 +10,7 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import sys
 import seaborn as sns
+import re
 
 np.set_printoptions(threshold=sys.maxsize)
 '''
@@ -161,16 +163,13 @@ def df_MI(arrays):
     df = pd.DataFrame(index=multi_index)
     return df
 
-
-
 #função para transformar album em dataframe
 def albuns_mais_plv():
-    palavras = str(pega_albuns()).split()
-    lista_palavras = []
+    palavras = str(pega_albuns()).encode("utf-8").decode("utf-8")
+    palavras = str(palavras).split()
+    lista_palavras = ["a"]
     for a in palavras:
-        item = a
-        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ""]:
-            item = item.replace(b, "")
+        item = re.sub("[^A-Za-z0-9]+", "", a)
         lista_palavras.append(item)
     for a in lista_palavras:
         if a == "":
@@ -189,14 +188,13 @@ def wordcloud_album(texto):
     return wordcloud
 
 #albuns_mais_plv()
+#wordcloud_album(albuns_mais_plv())
 
 def musicas_mais_plv():
     palavras = str(pega_musicas()).split()
     lista_palavras = []
     for a in palavras:
-        item = a
-        for b in ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";"]:
-            item = item.replace(b, "")
+        item = re.sub("[^A-Za-z0-9]+", "", a)
         lista_palavras.append(item)
     for a in lista_palavras:
         if a == "":
@@ -215,6 +213,7 @@ def wordloucd_musica(texto):
     return wordcloud_musicas
 
 #musicas_mais_plv()
+#wordloucd_musica(musicas_mais_plv())
 
 #Função que pega as letras das músicas únicas de todos os álbuns
 def pega_letras_unicas(data_frame_multiindex):
@@ -265,16 +264,16 @@ def letras_mais_plv():
     for a in letras:
         if a == r"\u0435":
             letras.replace(a, "")
-        elif a in [",",":","[","]",".",";","/","dtype=object","array",")","(","-"]:
-            letras.replace(a, "")
         else:
             a.lower()
             lista.append(a)
+            filtro =re.compile("\w+")
+    lista = list(filter(filtro.match, lista))
     df_letras = pd.DataFrame(lista, columns=["Letra"])
     print(df_letras.value_counts().iloc[0:30])
     return df_letras
 
-print(letras_mais_plv())
+#print(letras_mais_plv())
 
 #função que gera um wordcloud a partir do número de palavras das músicas
 def letras_wordcloud():
@@ -287,7 +286,7 @@ def letras_wordcloud():
     plt.show()
     return wordcloud_letras
 
-letras_wordcloud()
+#letras_wordcloud()
 
 def pega_premios():
     premios = []
@@ -346,15 +345,14 @@ def letras_por_album():
             print(f"o {album} não possui músicas contidas dentro dele")
             pass
         else:
+            df_musica_letras = df_musica_letras.reset_index()
             df_musica_album = df_musica_letras.loc[album, :]
-            letra = (str(df_musica_album.loc[:, "Letra"])).split(" ")
-            filtro =  ["-", "\ ", "(",")", "/", "]", "[", " \ ", "'", '"', "+", "_"," ", ",", ";", "\n", "\t", "...\nName:"]
-            for i in letra:
-                if i == filtro:
-                    letra.remove(i)
-            df_letras = pd.DataFrame(letra, columns=["Letra"])
+            letra = list(str(df_musica_album.loc[:, "Letra"]).split(" "))
+            filtro =  re.compile("/w+")
+            letra = list(filter(filtro.match, letra))
+            df_letras = pd.DataFrame(letra, columns=["Letra"]).drop_duplicates(subset=["Album"], keep=False)
             df_contar = df_letras.value_counts()
-            print("\n\n",album, df_contar.iloc[1: ], "\n\n", "_"*40)
+            print("\n\n",album.encode("utf-8"), df_contar.iloc[1: ], "\n\n", "_"*40)
         pd.set_option("display.max_rows", 10)
         pd.set_option("display.max_columns", 10)
     return
@@ -364,11 +362,14 @@ def letras_por_album():
 def album_in_letras():
     df_letras = letras_mais_plv() 
     lista_album = str(pega_albuns()).split
-    df_album_in_letras = df_letras[df_letras["letras"]==lista_album]
+    df_album_in_letras = df_letras[df_letras["Letra"]==lista_album]
     return df_album_in_letras
 
-#print(letras_mais_plv())
+#print(album_in_letras())
 
 
 def musicas_in_letras():
-    return
+    df_letras = letras_mais_plv() 
+    lista_musica = str(pega_musicas()).split
+    df_musica_in_letras = df_letras[df_letras["Letra"]==lista_musica]
+    return df_musica_in_letras
