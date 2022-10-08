@@ -1,4 +1,4 @@
-<h1>Análise de Músicas da banda Imagine Dragons</h1>
+<h1>Análise de músicas da banda Imagine Dragons</h1>
 > Status: Concluído
 
 <h3>Índice:</h3>
