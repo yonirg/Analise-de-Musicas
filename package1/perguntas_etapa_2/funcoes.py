@@ -165,7 +165,7 @@ def mais_ouvintes_por_album(dataset_com_ouvintes, dataframe):
             i+=1
         dict_mais_ouvidas[album] =dicionario_musicas
     return dict_mais_ouvidas
-
+"""
 def grafico_mais_ouvinte_por_album(dict_mais_ouvidas):
     df = pd.DataFrame.from_dict(dict_mais_ouvidas, orient="index").stack().to_frame()
     df = pd.DataFrame(df[0].values.tolist(), index = df.index)
@@ -177,7 +177,7 @@ def grafico_mais_ouvinte_por_album(dict_mais_ouvidas):
     filtro = re.compile("[\w+]")
     lista = list(filter(filtro.match, df))
     return lista
-    
+"""
 
 print(grafico_mais_ouvinte_por_album(mais_ouvintes_por_album(dataset_com_ouvintes, dataframe)))
 
@@ -349,7 +349,7 @@ def wordloucd_musica(texto):
 
 #PERGUNTA 3
 def letras_por_album():
-    df_musica_letras = musica_com_letras()
+    df_musica_letras = dataframe_com_letras
     excecoes = ["Origins (Deluxe)", "Demons (TELYKast Remix)", "Shots (The Funk Hunters Remix)", "Shots (AtellaGali Remix)", "Mercury - Act 1 (Amazon Music Live)", "It's Time (Single Of The Week)", "Clouds (2008 Version) [Demo]"]
     for album in pega_albuns():
         if album in excecoes:
