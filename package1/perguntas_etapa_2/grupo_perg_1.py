@@ -3,7 +3,7 @@ import funcoes as fun
 import pandas as pd
 import matplotlib.pyplot as plt
 from dataframes_prontos import dataframe, dataset_com_ouvintes
-"""
+import seaborn as sns
 # Resposta da pergunta 1
 
 #Músicas com mais ouvintes por álbum:
@@ -76,7 +76,7 @@ plt.savefig("menor_duracao_geral")
 
 print("\n\n\n\nTOP 5 com maior duração de todas as músicas\n\n\n\n")
 print("*****   AGUARDE UM MOMENTO, O GRÁFICO SERÁ EXIBIDO POR 6 SEGUNDOS E EM SEGUIDA SALVO NO DIRETÓRIO dataset_etapa_1    *****\n\n\n\n")
-"""
+
 dataframe_duracao = dataset_com_ouvintes.rename(columns={"Duracao(seg)":"Duracao"})
 dataframe_duracao_maior = dataframe_duracao.copy()
 dataframe_duracao_maior = dataframe_duracao_maior[dataframe_duracao_maior.Duracao != "Nan"]
@@ -85,7 +85,8 @@ dataframe_duracao_maior['Duracao'] = dataframe_duracao_maior['Duracao'].astype(f
 dataframe_duracao_maior = dataframe_duracao_maior.drop_duplicates().sort_values(by="Duracao", ascending=False)[:6]
 dataframe_duracao_maior.drop(235, axis=0, inplace=True)
 dataframe_duracao_maior.drop(["Letra", "Popularidade","Ouvintes"], axis=1, inplace=True)
-"""
+
+
 print(dataframe_duracao_maior)
 grafico_menor_duracao = dataframe_duracao_maior.plot(x="Musica", y="Duracao", kind="bar")
 grafico_menor_duracao.plot()
@@ -93,10 +94,26 @@ plt.show(block=False)
 plt.pause(6)
 plt.close()
 plt.savefig("maior_duracao_geral")
-"""
 
-import seaborn as sns
-df = dataframe_duracao_maior.drop(["Letra", "Popularidade","Ouvintes"], axis=1)
-mapa_cor = sns.heatmap(df.corr(), annot=True)
-plt.tight_layout()
-plt.show()
+
+
+
+
+
+
+
+
+# Pergunta 6
+# Gráfico de Dispersão da relação de duração das músicas com a quantidade de vezes ouvida
+print("\n\n\n\n Gráfico de Dispersão da relação de duração das músicas com a quantidade de vezes ouvida\n\n\n\n")
+
+df = dataframe_duracao.copy()
+df = df.reset_index()
+df.drop(["Letra","Album", "Musica"], axis=1, inplace=True)
+df = df.astype(float)
+sns.scatterplot(data=df, x="Duracao", y="Ouvintes")
+plt.xlim([0,550])
+plt.show(block=False)
+plt.pause(6)
+plt.close()
+plt.savefig("relacao_duracao_ouvintes")
