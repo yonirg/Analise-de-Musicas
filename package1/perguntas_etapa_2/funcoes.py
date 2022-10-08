@@ -18,7 +18,7 @@ from urllib.parse import quote_plus
 caminho_dataset = sys.path[0].replace("perguntas_etapa_2", "dataset_etapa_1")
 sys.path.insert(0, caminho_dataset)
 #from modulo_dataset import pega_albuns
-
+from dataframes_prontos import dataframe_com_letras
 
 #*************************************************************** FUNÇÕES AUXILIARES***************************************************************#
 # Função que pega todas as músicas do Imagine Dragons
@@ -134,45 +134,12 @@ def pega_letras_unicas(data_frame_multiindex):
     df_unicas["Letra"] = lista_letras
     return df_unicas
 
-def albuns_musicas():
-    dict_albuns_musicas = {}
-    for nome_album in pega_albuns():
-        if "+" in nome_album:
-            nome_album = nome_album.replace("+", "%2B")
-        album_codificado = quote_plus(nome_album)
-        page = requests.get(f"https://www.last.fm/pt/music/Imagine+Dragons/{album_codificado}")
-        soup = BeautifulSoup(page.content, "html.parser")
-        with open("x.html","w", encoding="utf-8") as f:
-            f.write(str(soup))
-        try:
-            container_musicas_album = soup.find("section", id= "tracklist").find("tbody")
-        except AttributeError as error:
-            print(f"Sem músicas no Álbum {nome_album}  Erro: {error}")
-            continue
-        musicas_album = container_musicas_album.find_all('tr')
-        conjunto_musicas_album = []
-        for musica_album in musicas_album:
-            nome_musica = musica_album.find("td", class_="chartlist-name").find("a").get_text()
-            conjunto_musicas_album.append(nome_musica)
-        if "%2B" in nome_album:
-            nome_album = nome_album.replace("%2B", "+")
-        dict_albuns_musicas[nome_album]=conjunto_musicas_album
-    return dict_albuns_musicas
-
 def letras_df(df, df_unicas):
     df_unicas = df_unicas.set_index("Musica")
     left = df_unicas
     right = df
     result = left.join(right, how="inner")
     return result
-
-def musica_com_letras():
-    arrays = auxiliar_multi_index(albuns_musicas())
-    df = df_MI(arrays)
-    df_unicas = pega_letras_unicas(df)
-    df_final = letras_df(df, df_unicas)
-    return df_final
-
 
 ######################################## GRUPO 1 DE PERGUNTAS ########################################
 
@@ -380,7 +347,7 @@ def wordloucd_musica(texto):
 # PERGUNTA 4
 
 def letras_mais_plv():
-    letras = (musica_com_letras().reset_index())
+    letras = (dataframe_com_letras.reset_index())
     letras = np.array([letras.loc[:, "Letra"]])
     letras = str(list(letras)).split()
     lista=[]
@@ -395,12 +362,10 @@ def letras_mais_plv():
     df_letras = pd.DataFrame(lista, columns=["Letra"])
     for value in df_letras.values:
         value = np.array(str(value).lower())
-    print(df_letras.value_counts().iloc[0:30])
-    return df_letras
+    return (df_letras, df_letras.value_counts().iloc[0:30])
 
 
-def letras_wordcloud():
-    df_letras = letras_mais_plv()
+def letras_wordcloud(df_letras):
     np.set_printoptions(threshold=sys.maxsize)
     texto = df_letras.values
     wordcloud_letras = WordCloud().generate(str(texto))
@@ -412,7 +377,7 @@ def letras_wordcloud():
     plt.savefig("palavras_mais_comuns_nas_letras")
     return wordcloud_letras
 
-letras_wordcloud()
+#letras_wordcloud()
 
 # PERGUNTA 5
 
