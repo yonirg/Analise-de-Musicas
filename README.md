@@ -145,19 +145,22 @@ converter os dataframes necessários no formato .csv. E, assim, utilizarmos eles
   b) Menos ouvidas em toda história
   
   
-  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/3b.PNG)
+  ![alt text]()
   
   
   
   4) a) Mais longas em toda história
    
    
-   ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/3b.PNG)
+   ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/4b.PNG)
 
-  
   
   b) Mais curtas em toda história
   
+  
+  
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/4a.PNG)
+
   
   5)
   
