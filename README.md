@@ -134,18 +134,17 @@ converter os dataframes necessários no formato .csv. E, assim, utilizarmos eles
   ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/2b.PNG)
   
   
-  3) a) Mais ouvidas em toda hisória
+  3) a) Menos ouvidas em toda hisória
   
   
-  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/3a.png)
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/3a.png)
   
   
   
+  b) Mais ouvidas em toda história
   
-  b) Menos ouvidas em toda história
   
-  
-  ![alt text]()
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/3b.PNG)
   
   
   
@@ -162,7 +161,11 @@ converter os dataframes necessários no formato .csv. E, assim, utilizarmos eles
   ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/4a.PNG)
 
   
-  5)
+  5)  Prêmios por Álbum
+  
+  
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/5.PNG)
+
   
   
   6) Relação Duração e quantidade de ouvintes
@@ -171,23 +174,43 @@ converter os dataframes necessários no formato .csv. E, assim, utilizarmos eles
   
   GRUPO DE PERGUNTAS 2:
   
-  1)
+  1)Mais comuns nos títulos dos álbuns
   
   
-  2)
   
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp2/1.PNG)
+  
+  2)Mais comuns nos títulos das músicas
+
+
+
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp2/2.png)
   
   3)
   
   
-  4)
   
   
-  5)
   
   
-  6)
+  4)Mais comuns nas letras das músicas em toda discografia
   
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp2/4.png)
+
+  
+  
+  5)Título de álbum não é um tema tão recorrente nas letras
+  
+  
+  
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp2/5.png)
+  
+  
+  6)Título de músicas são temas recorrente nas letras
+  
+  
+  
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp2/6.png)
   
   GRUPO DE PERGUNTAS 3:
   
