@@ -119,22 +119,11 @@ def mais_ouvintes_por_album(dataset_com_ouvintes, dataframe):
             dicionario_musicas[nome_musica[i]] = num_ouvintes[i]
             i+=1
         dict_mais_ouvidas[album] =dicionario_musicas
-    return dict_mais_ouvidas
-"""
-def grafico_mais_ouvinte_por_album(dict_mais_ouvidas):
     df = pd.DataFrame.from_dict(dict_mais_ouvidas, orient="index").stack().to_frame()
-    df = pd.DataFrame(df[0].values.tolist(), index = df.index)
-    df = str(df.values.tolist()).split()
-    lista=[]
-    for valor in df:
-        valor=re.sub(r"[$/\]","",valor)
-        lista.append(valor)
-    filtro = re.compile("[\w+]")
-    lista = list(filter(filtro.match, df))
-    return lista
-"""
-
-#print(grafico_mais_ouvinte_por_album(mais_ouvintes_por_album(dataset_com_ouvintes, dataframe)))
+    df = pd.DataFrame(df[0].values.tolist(), index = df.index).reset_index()
+    df.columns = ["Album","Musica","Ouvinte"]
+    df.sort_values(by=["Ouvinte"])
+    return df
 
 
 # Retorna um dicionário de até as 5 músicas menos ouvidas por álbum
@@ -155,7 +144,11 @@ def menos_ouvintes_por_album(dataset_com_ouvintes, dataframe):
             dicionario_musicas[nome_musica[i]] = num_ouvintes[i]
             i+=1
         dict_menos_ouvidas[album] =dicionario_musicas
-    return dict_menos_ouvidas
+    df = pd.DataFrame.from_dict(dict_menos_ouvidas, orient="index").stack().to_frame()
+    df = pd.DataFrame(df[0].values.tolist(), index = df.index).reset_index()
+    df.columns = ["Album","Musica","Ouvinte"]
+    df.sort_values(by=["Ouvinte"], ascending=False)
+    return df
 
 # PERGUNTA 2
 # Retorna um dicionário de até as 5 músicas mais curtas por álbum
@@ -173,7 +166,11 @@ def mais_curtas_por_album(dataset_com_ouvintes, dataframe):
             dicionario_musicas[nome_musica[i]] = num_ouvintes[i]
             i+=1
         dict_mais_curtas[album] =dicionario_musicas
-    return dict_mais_curtas
+    df = pd.DataFrame.from_dict(dict_mais_curtas, orient="index").stack().to_frame()
+    df = pd.DataFrame(df[0].values.tolist(), index = df.index).reset_index()
+    df.columns = ["Album","Musica","Duracao"]
+    df.sort_values(by=["Duracao"], ascending=False)
+    return df
 
 
 # Retorna um dicionário de até as 5 músicas mais longas por álbum
@@ -191,7 +188,11 @@ def menos_curtas_por_album(dataset_com_ouvintes, dataframe):
             dicionario_musicas[nome_musica[i]] = num_ouvintes[i]
             i+=1
         dict_menos_curtas[album] =dicionario_musicas
-    return dict_menos_curtas
+    df = pd.DataFrame.from_dict(dict_menos_curtas, orient="index").stack().to_frame()
+    df = pd.DataFrame(df[0].values.tolist(), index = df.index).reset_index()
+    df.columns = ["Album","Musica","Duracao"]
+    df.sort_values(by=["Duracao"])
+    return df
 
 
 
@@ -207,14 +208,14 @@ def musica_mais_tocada():
     df_musicas.reset_index(drop=True, inplace=True)
     df_ouvir.reset_index(drop=True, inplace=True)
     df_faixas = pd.concat([df_musicas, df_ouvir], axis=1)
-    #print(df_faixas)
+    print(df_faixas)
     df_faixas = df_faixas[0:5]
     barras = sns.barplot(x="Musicas", y="Numero_Ouvintes", data=df_faixas)
     plt.savefig("musicas_mais_tocadas")
     plt.show(block=False)
     plt.pause(6)
     plt.close()
-    return barras
+    return barras, df_faixas
 
 def musica_menos_tocada():
     #a partir do dataframe, é possível escolher a música menos tocada
@@ -225,19 +226,79 @@ def musica_menos_tocada():
     df_faixas = pd.concat([df_musicas, df_ouvir], axis=1)
     df_musicas_inv = df_musicas.tail(1)
     df_faixas_inv = df_faixas.tail(5)
+    print(df_faixas_inv)
     print("A música menos tocada é",df_musicas_inv["Musicas"].iloc[0])
     barras = sns.barplot(x="Musicas", y="Numero_Ouvintes", data=df_faixas_inv)
     plt.savefig("musicas_menos_tocadas")
     plt.show(block=False)
     plt.pause(6)
     plt.close()
-    return barras 
+    return barras
+
+#PERGUNTA 4
+def musicas_menor_duracao():
+    print("\n\n\n\nTOP 5 com menor duração de todas as músicas\n\n\n\n")
+    dataframe_duracao = dataset_com_ouvintes.rename(columns={"Duracao(seg)":"Duracao"})
+    dataframe_duracao_maior = dataframe_duracao.copy()
+    dataframe_duracao_maior = dataframe_duracao_maior[dataframe_duracao_maior.Duracao != "Nan"]
+    dataframe_duracao_maior = dataframe_duracao_maior.reset_index().drop("Album", axis=1)
+    dataframe_duracao_maior['Duracao'] = dataframe_duracao_maior['Duracao'].astype(float)
+    dataframe_duracao_maior = dataframe_duracao_maior.drop_duplicates().sort_values(by="Duracao", ascending=True)[:5]
+    dataframe_duracao_maior.drop(["Letra", "Popularidade","Ouvintes"], axis=1, inplace=True)
+    print(dataframe_duracao_maior)
+    import matplotlib.pyplot as plt
+    grafico_menor_duracao = dataframe_duracao_maior.plot(x="Musica", y="Duracao", kind="bar")
+    grafico_menor_duracao.plot()
+    plt.savefig("menor_duracao_geral")
+    plt.show(block=False)
+    plt.pause(6)
+    plt.close()
+    return
+
+def musicas_maior_duracao():
+    print("\n\n\n\nTOP 5 com maior duração de todas as músicas\n\n\n\n")
+    print("*****   AGUARDE UM MOMENTO, O GRÁFICO SERÁ EXIBIDO POR 6 SEGUNDOS E EM SEGUIDA SALVO NO DIRETÓRIO dataset_etapa_1    *****\n\n\n\n")
+    dataframe_duracao = dataset_com_ouvintes.rename(columns={"Duracao(seg)":"Duracao"})
+    dataframe_duracao_maior = dataframe_duracao.copy()
+    dataframe_duracao_maior = dataframe_duracao_maior[dataframe_duracao_maior.Duracao != "Nan"]
+    dataframe_duracao_maior = dataframe_duracao_maior.reset_index().drop("Album", axis=1)
+    dataframe_duracao_maior['Duracao'] = dataframe_duracao_maior['Duracao'].astype(float)
+    dataframe_duracao_maior = dataframe_duracao_maior.drop_duplicates().sort_values(by="Duracao", ascending=False)[:6]
+    dataframe_duracao_maior.drop(235, axis=0, inplace=True)
+    dataframe_duracao_maior.drop(["Letra", "Popularidade","Ouvintes"], axis=1, inplace=True)
+    print(dataframe_duracao_maior)
+    grafico_menor_duracao = dataframe_duracao_maior.plot(x="Musica", y="Duracao", kind="bar")
+    grafico_menor_duracao.plot()
+    plt.savefig("maior_duracao_geral")
+    plt.show(block=False)
+    plt.pause(6)
+    plt.close()
+    return
+
+#PERGUNTA 5
+#função que retorna a quantidade de prêmios que os albuns ganharam
+def premios_album():
+    dados = {"Album" : ["Night Visions", "Evolve", "Evolve"], "Premio" : ["Top Rock Album","Alternative Rock Album of the Year","Top Rock Album"]}
+    df_album_prem = pd.DataFrame(dados)
+    contagem = df_album_prem["Album"].value_counts()
+    return contagem
 
 
-
-
-
-
+#PERGUNTA 6
+def musicas_popularidade_duracao():
+    print("\n\n\n\n Gráfico de Dispersão da relação de duração das músicas com a quantidade de vezes ouvida\n\n\n\n")
+    dataframe_duracao = dataset_com_ouvintes.rename(columns={"Duracao(seg)":"Duracao"})
+    df = dataframe_duracao.copy()
+    df = df.reset_index()
+    df.drop(["Letra","Album", "Musica"], axis=1, inplace=True)
+    df = df.astype(float)
+    sns.scatterplot(data=df, x="Duracao", y="Ouvintes")
+    plt.xlim([0,550])
+    plt.savefig("relacao_duracao_ouvintes")
+    plt.show(block=False)
+    plt.pause(6)
+    plt.close()
+    return
 
 
 
@@ -317,9 +378,13 @@ def letras_por_album():
             pass
         else:
             df_musica_letras = df_musica_letras.reset_index()
-            df_musica_album = df_musica_letras.loc[album, :]
-            letra = list(str(df_musica_album.loc[:, "Letra"]).split(" "))
-            filtro =  re.compile("/w+")
+            del df_musica_letras["index"]
+            del df_musica_letras["Musica"]
+            print(df_musica_letras)
+            for album in df_musica_letras["Album"]:
+                df_musica_album = df_musica_letras.loc[album, : ]
+                letra = list(str(df_musica_album.loc[:, "Letra"]).split(" "))
+                filtro =  re.compile("/w+")
             letra = list(filter(filtro.match, letra))
             df_letras = pd.DataFrame(letra, columns=["Letra"]).drop_duplicates(subset=["Album"], keep=False)
             df_contar = df_letras.value_counts()
@@ -455,11 +520,3 @@ def musica_tocada(n):
         #localiza o índice da função
     except Exception as error:
         return error
-
-
-#função que retorna a quantidade de prêmios que os albuns ganharam
-def premios_album():
-    dados = {"Album" : ["Night Visions", "Evolve", "Evolve"], "Premio" : ["Top Rock Album","Alternative Rock Album of the Year","Top Rock Album"]}
-    df_album_prem = pd.DataFrame(dados)
-    contagem = df_album_prem["Album"].value_counts()
-    return contagem
