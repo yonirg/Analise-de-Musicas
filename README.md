@@ -97,7 +97,8 @@ converter os dataframes necessários no formato .csv. E, assim, utilizarmos eles
 - [ ] No diretório package1, acesse a pasta perguntas_etapa_2 e execute o arquivo grupo_perg_2.py para ver as respostas do grupo 2 de perguntas
 - [ ] No diretório package1, acesse a pasta perguntas_etapa_2 e execute o arquivo grupo_perg_3.py para ver as respostas do grupo 3 de perguntas
 
-
+- [ ] Dataset:
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/dataset.PNG)
 
 
   <h3 id=respostas>Respostas:</h3>
@@ -107,22 +108,66 @@ converter os dataframes necessários no formato .csv. E, assim, utilizarmos eles
   
   GRUPO DE PERGUNTAS 1:
   
-  1)
+  1) a) Mais Ouvidas por álbum
   
   
-  2)
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/1a.PNG)
   
   
-  3)
+  
+  b) Menos Ouvidas por álbum
   
   
-  4)
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/1b.PNG)
   
+  
+  2) a) Mais Longas por álbum
+  
+  
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/2a.PNG)
+  
+  
+  
+  b) Mais Curtas por álbum
+  
+  
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/2b.PNG)
+  
+  
+  3) a) Mais ouvidas em toda hisória
+  
+  
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/3a.png)
+  
+  
+  
+  
+  b) Menos ouvidas em toda história
+  
+  
+  ![alt text]()
+  
+  
+  
+  4) a) Mais longas em toda história
+   
+   
+   ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/4b.PNG)
+
+  
+  b) Mais curtas em toda história
+  
+  
+  
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/4a.PNG)
+
   
   5)
   
   
-  6)
+  6) Relação Duração e quantidade de ouvintes
+  
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp1/6.png)
   
   GRUPO DE PERGUNTAS 2:
   
