@@ -19,7 +19,7 @@ def pega_nomeacoes():
     df_nomeacao.value_counts()
     return df_nomeacao
 
-#print(pega_nomeacoes().value_counts())
+print(pega_nomeacoes().value_counts())
 
 #QUAIS FORAM OS ANOS QUE A BANDA MAIS GANHOU PRÊMIO?
 def pega_ano_vencedor():
@@ -34,7 +34,7 @@ def pega_ano_vencedor():
     df_ano_vencedor = pd.DataFrame(vencedor, columns=["Ano Vencedor"]) 
     return df_ano_vencedor
 
-#print(pega_ano_vencedor().value_counts())
+print(pega_ano_vencedor().value_counts())
 
 #QUAIS PREMIOS A BANDA GANHOU EM TODA SUA DISCOGRAFIA?
 def pega_vencedor():
@@ -56,4 +56,4 @@ def numero_vencedor():
     vencedor_premio = vencedor_premio[vencedor_premio.Vencedor=="Winner"].value_counts()
     return vencedor_premio
 
-#print(numero_vencedor())
+print(numero_vencedor())
