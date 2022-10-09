@@ -180,33 +180,29 @@ converter os dataframes necessários no formato .csv. E, assim, utilizarmos eles
   
   ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp2/1.PNG)
   
-  2)Mais comuns nos títulos das músicas
+  2) Mais comuns nos títulos das músicas
 
 
 
   ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp2/2.png)
   
-  3)
+
   
   
-  
-  
-  
-  
-  4)Mais comuns nas letras das músicas em toda discografia
+  4) Mais comuns nas letras das músicas em toda discografia
   
   ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp2/4.png)
 
   
   
-  5)Título de álbum não é um tema tão recorrente nas letras
+  5) Título de álbum não é um tema tão recorrente nas letras
   
   
   
   ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp2/5.png)
   
   
-  6)Título de músicas são temas recorrente nas letras
+  6) Título de músicas são temas recorrente nas letras
   
   
   
@@ -214,15 +210,26 @@ converter os dataframes necessários no formato .csv. E, assim, utilizarmos eles
   
   GRUPO DE PERGUNTAS 3:
   
-  1)
+  1)QUANTAS NOMEAÇÕES A BANDA TEVE?
   
   
-  2)
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp3/1.PNG)
+
   
+  2)QUAIS FORAM OS ANOS QUE A BANDA MAIS GANHOU PRÊMIO?
+
+
+
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp3/2.PNG)
+
   
-  3)
-  
-  
+  3)QUAIS PREMIOS A BANDA GANHOU EM TODA SUA DISCOGRAFIA?
+
+
+
+  ![alt text](https://github.com/yonirg/Analise-de-Musicas/blob/unida/imgs/grp3/3.PNG)
+
+
   <h3 id=equipe>Nossa equipe:</h3>
   
   
