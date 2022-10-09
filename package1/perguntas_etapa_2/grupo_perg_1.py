@@ -1,4 +1,3 @@
-from turtle import clear
 import funcoes as fun
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -95,7 +94,6 @@ plt.savefig("maior_duracao_geral")
 plt.show(block=False)
 plt.pause(6)
 plt.close()
-
 
 
 #Pergunta 5
