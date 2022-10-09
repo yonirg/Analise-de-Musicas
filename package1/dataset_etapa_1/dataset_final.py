@@ -1,0 +1,4 @@
+from dataframes_prontos import dataset_com_ouvintes
+
+dataset_final = dataset_com_ouvintes
+print(dataset_final)

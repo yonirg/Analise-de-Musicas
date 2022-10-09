@@ -55,7 +55,6 @@ fun.musicas_menor_duracao()
 
 fun.musicas_maior_duracao()
 
-
 #Pergunta 5
 
 premios = premios_album()

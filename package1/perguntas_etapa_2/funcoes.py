@@ -5,7 +5,6 @@ import seaborn as sns
 import sys
 from bs4 import BeautifulSoup
 from wordcloud import WordCloud
-import pathlib
 import numpy as np
 import re
 from urllib.parse import quote_plus
